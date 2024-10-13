@@ -39,3 +39,6 @@ def fetch_player_game_logs():
             print(f"Failed to fetch game logs for player {player.player_id}. Status Code: {response.status_code}")
 
     db.session.commit()
+
+if __name__ == '__main__':
+    fetch_player_game_logs()

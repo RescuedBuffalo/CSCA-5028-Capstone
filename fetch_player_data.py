@@ -67,3 +67,6 @@ def fetch_and_store_player_data():
                 db.session.add(new_player)
 
     db.session.commit()
+
+if __name__ == '__main__':
+    fetch_and_store_player_data()
