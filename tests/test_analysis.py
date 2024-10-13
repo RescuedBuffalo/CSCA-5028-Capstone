@@ -24,7 +24,8 @@ sample_player_data = {
             "points": 982,
             "shots": 2211,
             "powerPlayGoals": 78,
-            "shootingPctg": 0.1515
+            "shootingPctg": 0.1515,
+            "avgToi": "22:00",
         }
     },
     "last5Games": [
