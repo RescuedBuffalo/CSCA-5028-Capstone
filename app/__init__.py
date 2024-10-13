@@ -1,25 +1,23 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from config import config  # Import your config
 
-# Initialize the database and migration tool (no app attached yet)
 db = SQLAlchemy()
-migrate = Migrate()
 
-def create_app():
-    # Initialize the Flask app
+def create_app(config_name=None):
     app = Flask(__name__)
 
-    # Configure the database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    # Apply the configuration to the app based on the passed config name
+    if config_name:
+        app.config.from_object(config[config_name])
+    else:
+        app.config.from_object(config['default'])  # Fallback to default config
 
-    # Initialize the database and migration tool with the app
     db.init_app(app)
-    migrate.init_app(app, db)
+    Migrate(app, db)
 
-    # Register the blueprint
-    from app.routes import bp as main_bp
-    app.register_blueprint(main_bp)
+    from app.routes import bp as main_blueprint
+    app.register_blueprint(main_blueprint)
 
     return app

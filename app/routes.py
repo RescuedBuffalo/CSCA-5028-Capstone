@@ -37,7 +37,7 @@ def player_profile(player_id):
     game_logs = GameLog.query.filter_by(player_id=player_id).all()
 
     if not player:
-        return render_template('player_profile.html', error_message='Player not found'), 404
+        return render_template('report.html', error_message='Player not found'), 404
 
     # Prepare the player information and game logs
     player_info = {
