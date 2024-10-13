@@ -49,6 +49,7 @@ def test_analyze_player_performance():
     career_stats = result["career_stats"]
     assert career_stats["gamesPlayed"] == 645
     assert career_stats["points_per_game"] == pytest.approx(1.52, 0.01)  # Rounded value
+    assert career_stats["goals_per_game"] == pytest.approx(0.52, 0.01)  # Rounded value
 
     # Test last 5 games data
     last_5_games = result["last_5_games"]
