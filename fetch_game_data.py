@@ -1,5 +1,5 @@
 import requests
-from app import db
+from app import db, create_app
 from app.models import Player, GameLog
 
 def fetch_player_game_logs():
@@ -40,5 +40,8 @@ def fetch_player_game_logs():
 
     db.session.commit()
 
+app = create_app()
+
 if __name__ == '__main__':
-    fetch_player_game_logs()
+    with app.app_context():
+        fetch_player_game_logs()

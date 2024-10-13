@@ -1,4 +1,4 @@
-from app import db
+from app import db, create_app
 from app.models import Player
 from app.utils.nhl_api import get_nhl_player_stats
 from app.utils.analysis import analyze_player_performance
@@ -68,5 +68,8 @@ def fetch_and_store_player_data():
 
     db.session.commit()
 
+app = create_app()
+
 if __name__ == '__main__':
-    fetch_and_store_player_data()
+    with app.app_context():
+        fetch_and_store_player_data()
