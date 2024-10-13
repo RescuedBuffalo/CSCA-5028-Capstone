@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for
 from app import app
 from app.utils.nhl_api import get_nhl_player_stats
 from app.utils.analysis import analyze_player_performance
@@ -18,12 +18,7 @@ def index():
 
         if player_data:
             analyzed_data = analyze_player_performance(player_data)
-            return render_template(
-                'report.html',
-                player_info=analyzed_data["player_info"],
-                career_stats=analyzed_data["career_stats"],
-                last_5_games=analyzed_data["last_5_games"]
-            )
+            return redirect(url_for('player_profile', player_id=player_id))
         else:
             error_message = f'Could not fetch data with player ID: {player_id}'
             return render_template('index.html', error_message=error_message)
