@@ -1,6 +1,7 @@
 import requests
 from app import db, create_app
 from app.models import Player, GameLog
+import os
 
 def fetch_player_game_logs():
     players = Player.query.all()
@@ -40,8 +41,11 @@ def fetch_player_game_logs():
 
     db.session.commit()
 
-app = create_app()
+# Create app instance based on environment
+config_name = os.getenv('FLASK_CONFIG')
+app = create_app(config_name=config_name)
 
 if __name__ == '__main__':
+    # Use the app context to ensure the database session is available
     with app.app_context():
         fetch_player_game_logs()

@@ -2,6 +2,7 @@ from app import db, create_app
 from app.models import Player
 from app.utils.nhl_api import get_nhl_player_stats
 from app.utils.analysis import analyze_player_performance
+import os
 
 def fetch_and_store_player_data():
     player_ids = [8478402, 8477934, 8475786]  # Example player IDs
@@ -68,7 +69,8 @@ def fetch_and_store_player_data():
 
     db.session.commit()
 
-app = create_app()
+config_name = os.getenv('FLASK_CONFIG')
+app = create_app(config_name=config_name)
 
 if __name__ == '__main__':
     with app.app_context():
