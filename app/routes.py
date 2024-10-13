@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from app.utils.nhl_api import get_nhl_player_stats
 from app.utils.analysis import analyze_player_performance
-from app.models import Player
+from app.models import Player, GameLog
 
 # Create a blueprint for the routes
 bp = Blueprint('main', __name__)
@@ -20,7 +20,8 @@ def index():
 
         if player_data:
             analyzed_data = analyze_player_performance(player_data)
-            return redirect(url_for('player_profile', player_id=player_id))
+            # Redirect to the player_profile route using the blueprint's name
+            return redirect(url_for('main.player_profile', player_id=player_id))
         else:
             error_message = f'Could not fetch data with player ID: {player_id}'
             return render_template('index.html', error_message=error_message)
@@ -63,4 +64,4 @@ def player_profile(player_id):
         "power_play_goals": player.power_play_goals
     }
 
-    return render_template('player_profile.html', player_info=player_info, game_logs=game_logs)
+    return render_template('report.html', player_info=player_info, game_logs=game_logs)
