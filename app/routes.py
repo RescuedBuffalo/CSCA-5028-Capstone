@@ -2,26 +2,67 @@ from flask import render_template, request
 from app import app
 from app.utils.nhl_api import get_nhl_player_stats
 from app.utils.analysis import analyze_player_performance
+from app.models import Player
 
-# Route to display a basic form
+# Home route with a form to enter a player ID
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        player_id = request.form['player_id']
-        # Fetch player data with API
+        player_id = request.form.get('player_id')
+
+        if not player_id:
+            return render_template('index.html', error_message='Please provide a player ID.')
+
+        # Fetch player data using the NHL API
         player_data = get_nhl_player_stats(player_id)
 
         if player_data:
             analyzed_data = analyze_player_performance(player_data)
- 
             return render_template(
-                        'report.html',
-                        player_info=analyzed_data["player_info"],
-                        career_stats=analyzed_data["career_stats"],
-                        last_5_games=analyzed_data["last_5_games"]
-                    )
+                'report.html',
+                player_info=analyzed_data["player_info"],
+                career_stats=analyzed_data["career_stats"],
+                last_5_games=analyzed_data["last_5_games"]
+            )
         else:
-            error_message = 'Could not fetch data with player ID: {player_id}'
+            error_message = f'Could not fetch data with player ID: {player_id}'
             return render_template('index.html', error_message=error_message)
-        
+
+    # Render the form when the request method is GET
     return render_template('index.html')
+
+
+# Route to display player profile from the database
+@app.route('/player/<int:player_id>')
+def player_profile(player_id):
+    player = Player.query.filter_by(player_id=player_id).first()
+
+    if not player:
+        return render_template('player_profile.html', error_message='Player not found'), 404
+
+    # Prepare the player information to be rendered in the template
+    player_info = {
+        "first_name": player.first_name,
+        "last_name": player.last_name,
+        "team_name": player.team_name,
+        "position": player.position,
+        "jersey_number": player.jersey_number,
+        "headshot": player.headshot,
+        "birth_city": player.birth_city,
+        "birth_province": player.birth_province,
+        "birth_country": player.birth_country,
+        "height_in_inches": player.height_in_inches,
+        "weight_in_pounds": player.weight_in_pounds,
+        "points_per_game": player.points_per_game,
+        "goals_per_game": player.goals_per_game,
+        "avg_toi": player.avg_toi,
+        "shooting_pct": player.shooting_pct,
+        "games_played": player.games_played,
+        "goals": player.goals,
+        "assists": player.assists,
+        "points": player.points,
+        "shots": player.shots,
+        "power_play_goals": player.power_play_goals
+    }
+
+    return render_template('player_profile.html', player_info=player_info)
