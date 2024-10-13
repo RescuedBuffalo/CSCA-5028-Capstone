@@ -58,3 +58,19 @@ def test_analyze_player_performance():
     assert last_5_games[0]["goals"] == 0
     assert last_5_games[2]["goals"] == 1
     assert last_5_games[4]["assists"] == 2
+
+
+def test_analyze_player_performance_missing_data():
+    # Remove some fields from the mock data to simulate missing data
+    incomplete_data = sample_player_data.copy()
+    del incomplete_data["last5Games"]  # Simulate missing last 5 games
+
+    # Call the function with incomplete data
+    result = analyze_player_performance(incomplete_data)
+
+    # Ensure it still returns basic player info
+    assert result["player_info"]["first_name"] == "Connor"
+
+    # Test that last 5 games is empty or None
+    assert "last_5_games" in result
+    assert result["last_5_games"] == []
