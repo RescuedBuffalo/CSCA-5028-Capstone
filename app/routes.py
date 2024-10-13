@@ -3,7 +3,7 @@ from app import app
 from app.utils.nhl_api import get_nhl_player_stats
 
 # Route to display a basic form
-@app.route('/', method=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         player_id = request.form['player_id']
