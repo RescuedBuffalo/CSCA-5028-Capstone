@@ -19,7 +19,7 @@
 </head>
 <body>
     <h1>{{ player_info['first_name'] }} {{player_info['last_name'] }} ({{ player_info['team_name'] }})</h1>
-    <img src="{{ player_info['headshot'] }} alt="Headshot of {{ player_info['first_name'] }}" />
+    <img src="{{ player_info['headshot'] }}" alt="Headshot of {{ player_info['first_name'] }}" />
     <h2>Position: {{ player_info['position'] }}, Jersey Number: {{ player_info['jersey_number'] }}</h2>
     <h3>Born: {{ player_info['birth_city'] }}, {{ player_info['birth_province'] }}, {{ player_info['birth_country'] }}</h3>
     <h3>Height: {{player_info['height_in_inches'] }} inches, Weight: {{ player_info['weight_in_pounds'] }} lbs</h3>
