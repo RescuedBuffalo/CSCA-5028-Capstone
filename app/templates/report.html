@@ -1,12 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Player Stats</title>
-    </head>
-    <body>
-        <h1>Player Stats for ID: {{ player_id }}</h1>
-        <h2>Player Information:</h2>
-        <pre>{{ player_data | tojson }}</pre>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <title>Player Stats for {{ player_info['first_name'] }} {{ player_info['last_name'] }}</title>
+</head>
+<body>
+    <h1>{{ player_info['first_name'] }} {{ player_info['last_name'] }} ({{ player_info['team_name'] }})</h1>
+    <img src="{{ player_info['headshot'] }}" alt="Headshot of {{ player_info['first_name'] }}" />
+    <h2>Position: {{ player_info['position'] }}, Jersey Number: {{ player_info['jersey_number'] }}</h2>
+    <h3>Born: {{ player_info['birth_city'] }}, {{ player_info['birth_province'] }}, {{ player_info['birth_country'] }}</h3>
+    <h3>Height: {{ player_info['height_in_inches'] }} inches, Weight: {{ player_info['weight_in_pounds'] }} lbs</h3>
+
+    <h2>Career Regular Season Stats</h2>
+    <ul>
+        <li>Games Played: {{ career_stats['gamesPlayed'] }}</li>
+        <li>Goals: {{ career_stats['goals'] }}</li>
+        <li>Assists: {{ career_stats['assists'] }}</li>
+        <li>Points: {{ career_stats['points'] }}</li>
+        <li>Shots: {{ career_stats['shots'] }}</li>
+        <li>Power Play Goals: {{ career_stats['powerPlayGoals'] }}</li>
+        <li>Shooting Percentage: {{ career_stats['shootingPctg'] }}</li>
+    </ul>
+
+    <h2>Last 5 Games</h2>
+    <table border="1">
+        <tr>
+            <th>Date</th>
+            <th>Goals</th>
+            <th>Assists</th>
+            <th>Points</th>
+            <th>Shots</th>
+            <th>Time on Ice</th>
+        </tr>
+        {% for game in last_5_games %}
+        <tr>
+            <td>{{ game['gameDate'] }}</td>
+            <td>{{ game['goals'] }}</td>
+            <td>{{ game['assists'] }}</td>
+            <td>{{ game['points'] }}</td>
+            <td>{{ game['shots'] }}</td>
+            <td>{{ game['toi'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
 </html>
