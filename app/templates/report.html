@@ -2,28 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Player Stats for {{ player_info['first_name'] }} {{ player_info['last_name'] }}</title>
+    <title>Player Stats for {{ player_info['first_name'] }} {{player_info['last_name'] }}</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
-    <h1>{{ player_info['first_name'] }} {{ player_info['last_name'] }} ({{ player_info['team_name'] }})</h1>
-    <img src="{{ player_info['headshot'] }}" alt="Headshot of {{ player_info['first_name'] }}" />
+    <h1>{{ player_info['first_name'] }} {{player_info['last_name'] }} ({{ player_info['team_name'] }})</h1>
+    <img src="{{ player_info['headshot'] }} alt="Headshot of {{ player_info['first_name'] }}" />
     <h2>Position: {{ player_info['position'] }}, Jersey Number: {{ player_info['jersey_number'] }}</h2>
     <h3>Born: {{ player_info['birth_city'] }}, {{ player_info['birth_province'] }}, {{ player_info['birth_country'] }}</h3>
-    <h3>Height: {{ player_info['height_in_inches'] }} inches, Weight: {{ player_info['weight_in_pounds'] }} lbs</h3>
+    <h3>Height: {{player_info['height_in_inches'] }} inches, Weight: {{ player_info['weight_in_pounds'] }} lbs</h3>
 
     <h2>Career Regular Season Stats</h2>
-    <ul>
-        <li>Games Played: {{ career_stats['gamesPlayed'] }}</li>
-        <li>Goals: {{ career_stats['goals'] }}</li>
-        <li>Assists: {{ career_stats['assists'] }}</li>
-        <li>Points: {{ career_stats['points'] }}</li>
-        <li>Shots: {{ career_stats['shots'] }}</li>
-        <li>Power Play Goals: {{ career_stats['powerPlayGoals'] }}</li>
-        <li>Shooting Percentage: {{ career_stats['shootingPctg'] }}</li>
-    </ul>
-
+    <table>
+        <tr>
+            <th>Games Played</th>
+            <th>Goals</th>
+            <th>Assists</th>
+            <th>Points</th>
+            <th>Shots</th>
+            <th>Power Play Goals</th>
+            <th>Shooting Percentage</th>
+            <th>Points Per Game</th>
+            <th>Goals Per Game</th>
+        </tr>
+        <tr>
+            <td>{{ career_stats['gamesPlayed'] }}</td>
+            <td>{{ career_stats['goals'] }}</td>
+            <td>{{ career_stats['assists'] }}</td>
+            <td>{{ career_stats['points'] }}</td>
+            <td>{{ career_stats['shots'] }}</td>
+            <td>{{ career_stats['powerPlayGoals'] }}</td>
+            <td>{{ career_stats['shootingPctg'] }}</td>
+            <td>{{ career_stats['points_per_game'] }}</td>
+            <td>{{ career_stats['goals_per_game'] }}</td>
+        </tr>
+    </table>
     <h2>Last 5 Games</h2>
-    <table border="1">
+    <table>
         <tr>
             <th>Date</th>
             <th>Goals</th>

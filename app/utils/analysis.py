@@ -21,6 +21,23 @@ def analyze_player_performance(player_data):
     # Extract career regular season stats
     career_stats = player_data["careerTotals"]["regularSeason"]
 
+    # Calculate summary stats based on career
+    games_played = career_stats["gamesPlayed"] # this will be our often used denominator
+    if games_played > 0:
+        points_per_game = career_stats["points"] / games_played
+        goals_per_game = career_stats["goals"] / games_played
+        avg_toi = career_stats["avgToi"]
+        shooting_pct = career_stats["shootingPctg"]
+    else:
+        points_per_game = 0
+        goals_per_game = 0
+        avg_toi = 0
+        shooting_pct = 0
+
+    # Add these summary stats to the career stats dictionary
+    career_stats["points_per_game"] = points_per_game
+    career_stats["goals_per_game"] = goals_per_game
+
     # Extract last 5 games
     last_5_games = player_data["last5Games"]
 
