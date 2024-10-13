@@ -1,11 +1,13 @@
-from flask import render_template, request, redirect, url_for
-from app import app
+from flask import Blueprint, render_template, request, redirect, url_for
 from app.utils.nhl_api import get_nhl_player_stats
 from app.utils.analysis import analyze_player_performance
 from app.models import Player
 
+# Create a blueprint for the routes
+bp = Blueprint('main', __name__)
+
 # Home route with a form to enter a player ID
-@app.route('/', methods=['GET', 'POST'])
+@bp.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         player_id = request.form.get('player_id')
@@ -28,7 +30,7 @@ def index():
 
 
 # Route to display player profile from the database
-@app.route('/player/<int:player_id>')
+@bp.route('/player/<int:player_id>')
 def player_profile(player_id):
     player = Player.query.filter_by(player_id=player_id).first()
     game_logs = GameLog.query.filter_by(player_id=player_id).all()
