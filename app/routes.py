@@ -31,11 +31,12 @@ def index():
 @app.route('/player/<int:player_id>')
 def player_profile(player_id):
     player = Player.query.filter_by(player_id=player_id).first()
+    game_logs = GameLog.query.filter_by(player_id=player_id).all()
 
     if not player:
         return render_template('player_profile.html', error_message='Player not found'), 404
 
-    # Prepare the player information to be rendered in the template
+    # Prepare the player information and game logs
     player_info = {
         "first_name": player.first_name,
         "last_name": player.last_name,
@@ -60,4 +61,4 @@ def player_profile(player_id):
         "power_play_goals": player.power_play_goals
     }
 
-    return render_template('player_profile.html', player_info=player_info)
+    return render_template('player_profile.html', player_info=player_info, game_logs=game_logs)
