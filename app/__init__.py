@@ -2,16 +2,23 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-# Initialize the Flask app
-app = Flask(__name__)
+# Initialize the database and migration tool (no app attached yet)
+db = SQLAlchemy()
+migrate = Migrate()
 
-# Configure the database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+def create_app():
+    # Initialize the Flask app
+    app = Flask(__name__)
 
-# Initialize the database and migration tool
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+    # Configure the database
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Import your routes (ensure this is after initializing db to avoid circular imports)
-from app import routes
+    # Initialize the database and migration tool with the app
+    db.init_app(app)
+    migrate.init_app(app, db)
+
+    # Import your routes here to avoid circular imports
+    from app import routes
+
+    return app
