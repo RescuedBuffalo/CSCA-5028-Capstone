@@ -39,7 +39,7 @@ def analyze_player_performance(player_data):
     career_stats["goals_per_game"] = goals_per_game
 
     # Extract last 5 games
-    last_5_games = player_data["last5Games"]
+    last_5_games = player_data.get("last5Games", [])
 
     # Create a dictionary to hold all this information for easy rendering
     return {
