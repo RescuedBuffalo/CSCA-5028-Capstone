@@ -27,3 +27,14 @@ def test_get_nhl_player_stats(mock_get):
     assert result["people"][0]["fullName"] == "Connor McDavid"
     assert result["people"][0]["currentTeam"]["name"] == "Edmonton Oilers"
     assert result["people"][0]["primaryPosition"]["name"] == "Center"
+
+@patch('app.utils.nhl_api.requests.get')
+def test_get_nhl_player_stats_api_error(mock_get):
+    # Simulate a failed API call (e.g., 404 Not Found)
+    mock_get.return_value.status_code = 404
+
+    # Call the function with a sample player ID
+    result = get_nhl_player_stats(8478402)
+
+    # Test that it returns None or raises the expected error
+    assert result is None
