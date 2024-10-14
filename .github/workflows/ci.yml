@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI/CD Pipeline
 
 on:
     push:
@@ -13,7 +13,7 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-        - uses: actions/checkout@v2
+        - uses: actions/checkout@v3
 
         - name: Set up Python
           uses: actions/setup-python@v4
@@ -31,3 +31,11 @@ jobs:
           run: |
             source venv/bin/activate
             pytest
+
+        - name: Deploy to Heroku
+          env:
+            HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          run: |
+            heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
+            git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+            git push heroku main
