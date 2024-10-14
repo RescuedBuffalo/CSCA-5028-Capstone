@@ -37,10 +37,12 @@ jobs:
           env:
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
 
+        - name: Set Heroku remote
+          run: heroku git:remote -a nhl-reporting-app
+          env:
+            HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+    
         - name: Push to Heroku
-          run: |
-            git remote | grep heroku && git remote remove heroku || true
-            heroku git:remote -a nhl-reporting-app
-            git push heroku main
+          run: git push heroku main
           env:
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
