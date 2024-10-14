@@ -32,10 +32,15 @@ jobs:
             source venv/bin/activate
             pytest
 
-        - name: Deploy to Heroku
+        - name: Authenticate with Heroku
+          run: echo "$HEROKU_API_KEY" | docker login --username=_ --password-stdin registry.heroku.com
           env:
             HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
+        - name: Push to Heroku
           run: |
             git remote | grep heroku && git remote remove heroku || true
-            heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
+            heroku git:remote -a your-app-name
             git push heroku main
+          env:
+            HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
