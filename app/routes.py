@@ -1,10 +1,14 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, Response
 from app.utils.nhl_api import get_nhl_player_stats
 from app.utils.analysis import analyze_player_performance
 from app.models import Player, GameLog
+from prometheus_client import generate_latest, CollectorRegistry, CONTENT_TYPE_LATEST, Counter, Histogram
+
 
 # Create a blueprint for the routes
 bp = Blueprint('main', __name__)
+REQUEST_COUNT = Counter('app_requests_toal', 'Total number of requests')
+REQUEST_LATENCY = Histogram('app_request_latency_seconds', 'Request latency in seconds')
 
 # Home route with a form to enter a player ID
 @bp.route('/', methods=['GET', 'POST'])
@@ -65,3 +69,19 @@ def player_profile(player_id):
     }
 
     return render_template('report.html', player_info=player_info, game_logs=game_logs)
+
+@bp.route('/metrics')
+def metrics():
+    registry = CollectorRegistry()
+
+    data = generate_latest(registry)
+    return Response(data, content_type=CONTENT_TYPE_LATEST)
+
+@bp.before_request
+def before_request():
+    REQUEST_COUNT .inc()
+
+@bp.after_request
+def after_request(response):
+    REQUEST_LATENCY.observe(response.elapsed.total_seconds())
+    return response 
