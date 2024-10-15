@@ -3,6 +3,7 @@ from app.utils.nhl_api import get_nhl_player_stats
 from app.utils.analysis import analyze_player_performance
 from app.models import Player, GameLog
 from prometheus_client import generate_latest, CollectorRegistry, CONTENT_TYPE_LATEST, Counter, Histogram
+import time
 
 
 # Create a blueprint for the routes
@@ -79,9 +80,12 @@ def metrics():
 
 @bp.before_request
 def before_request():
-    REQUEST_COUNT .inc()
+    REQUEST_COUNT.inc()
+    request.start_time = time.time()
 
 @bp.after_request
 def after_request(response):
-    REQUEST_LATENCY.observe(response.elapsed.total_seconds())
+    latency = time.time() - request.start_time
+
+    REQUEST_LATENCY.observe(latency)
     return response 
