@@ -10,6 +10,8 @@ import time
 bp = Blueprint('main', __name__)
 REQUEST_COUNT = Counter('app_requests_toal', 'Total number of requests')
 REQUEST_LATENCY = Histogram('app_request_latency_seconds', 'Request latency in seconds')
+# Metric that maps the player_id to the number of times it was searched
+PLAYER_SEARCH_COUNT = Counter('player_search_count', 'Number of times a player was searched', ['player_id'])
 
 # Home route with a form to enter a player ID
 @bp.route('/', methods=['GET', 'POST'])
@@ -71,6 +73,7 @@ def player_profile(player_id):
 
     return render_template('report.html', player_info=player_info, game_logs=game_logs)
 
+# Route to expose the metrics
 @bp.route('/metrics')
 def metrics():
     registry = CollectorRegistry()
@@ -78,14 +81,22 @@ def metrics():
     data = generate_latest(registry)
     return Response(data, content_type=CONTENT_TYPE_LATEST)
 
+# Middleware to track metric data before requests occur
 @bp.before_request
 def before_request():
     REQUEST_COUNT.inc()
     request.start_time = time.time()
 
+# Middleware to track metric data after requests occur
 @bp.after_request
 def after_request(response):
     latency = time.time() - request.start_time
 
     REQUEST_LATENCY.observe(latency)
+
+    # Increment the player search count metric
+    player_id = request.args.get('player_id')
+    if player_id:
+        PLAYER_SEARCH_COUNT.labels(player_id).inc()
+
     return response 
