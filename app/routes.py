@@ -79,7 +79,11 @@ def metrics():
     registry = CollectorRegistry()
 
     data = generate_latest(registry)
-    return Response(data, content_type=CONTENT_TYPE_LATEST)
+    return Response(data, content_type=CONTENT_TYPE_LATEST, status=200)
+
+@bp.route('/health')
+def health():
+    return Response('Ok', status=200)
 
 # Middleware to track metric data before requests occur
 @bp.before_request
