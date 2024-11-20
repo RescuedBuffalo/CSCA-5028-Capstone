@@ -10,8 +10,6 @@ db = SQLAlchemy()
 def create_app(config_name=None):
     app = Flask(__name__)
 
-    print(f"DATABASE_URL: {app.config.get('SQLALCHEMY_DATABASE_URI')}")
-
     # Apply the configuration to the app based on the passed config name
     if config_name:
         app.config.from_object(config[config_name])
