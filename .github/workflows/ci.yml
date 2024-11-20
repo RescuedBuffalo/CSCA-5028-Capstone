@@ -30,7 +30,10 @@ jobs:
         - name: Run tests
           run: |
             source venv/bin/activate
-            export FLASK_CONFIG=testing
+            echo "FLASK_ENV=production
+            CONFIG_NAME=production
+            DATABASE_URL=postgresql://ub22a0vvtepq9a:pf1d1c55a7df90189519ec551ebb0f6af8dcd3665afe26a7dc7196c45b2450a0a@cb5ajfjosdpmil.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/dfosdmrmvl3r71
+            SECRET_KEY='72c0f6776effb1957d13fc9027a6cbc3'" >> .env
             pytest
 
         - name: Deploy to Heroku
