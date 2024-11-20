@@ -10,7 +10,6 @@ class DevelopmentConfig(Config):
 
 
 class ProductionConfig(Config):
-    # Ensure SQLALCHEMY_DATABASE_URI is properly set, or raise an error
     SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
 
 

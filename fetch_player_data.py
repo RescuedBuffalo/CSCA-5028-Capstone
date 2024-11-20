@@ -3,6 +3,7 @@ from app.models import Player
 from app.utils.nhl_api import get_nhl_player_stats
 from app.utils.analysis import analyze_player_performance
 import os
+from dotenv import load_dotenv
 
 def fetch_and_store_player_data():
     player_ids = [8478402, 8477934, 8475786]  # Example player IDs
@@ -69,11 +70,17 @@ def fetch_and_store_player_data():
 
     try:
         db.session.commit()
+        print('Data saved successfully to {}'.format(os.getenv('SQLALCHEMY_DATABASE_URI')))
+        db.session.close()
     except Exception as e:
         db.session.rollback()
         print(f"Error saving data: {e}")
+        db.session.close()
 
-config_name = os.getenv('FLASK_CONFIG')
+load_dotenv('.env')
+
+config_name = os.getenv('CONFIG_NAME')
+
 app = create_app(config_name=config_name)
 
 if __name__ == '__main__':

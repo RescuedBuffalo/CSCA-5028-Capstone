@@ -2,6 +2,7 @@ import requests
 from app import db, create_app
 from app.models import Player, GameLog
 import os
+from dotenv import load_dotenv
 
 def fetch_player_game_logs():
     players = Player.query.all()
@@ -41,12 +42,17 @@ def fetch_player_game_logs():
 
     try:
         db.session.commit()
+        print('Data saved successfully to {}'.format(os.getenv('SQLALCHEMY_DATABASE_URI')))
+        db.session.close()
     except Exception as e:
         db.session.rollback()
         print(f"Error saving data: {e}")
+        db.session.close()
 
 # Create app instance based on environment
-config_name = os.getenv('FLASK_CONFIG')
+load_dotenv('.env')
+
+config_name = os.getenv('CONFIG_NAME')
 app = create_app(config_name=config_name)
 
 if __name__ == '__main__':
