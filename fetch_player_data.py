@@ -67,7 +67,11 @@ def fetch_and_store_player_data():
                 )
                 db.session.add(new_player)
 
-    db.session.commit()
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error saving data: {e}")
 
 config_name = os.getenv('FLASK_CONFIG')
 app = create_app(config_name=config_name)

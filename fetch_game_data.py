@@ -39,7 +39,11 @@ def fetch_player_game_logs():
         else:
             print(f"Failed to fetch game logs for player {player.player_id}. Status Code: {response.status_code}")
 
-    db.session.commit()
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error saving data: {e}")
 
 # Create app instance based on environment
 config_name = os.getenv('FLASK_CONFIG')
