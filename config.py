@@ -10,7 +10,7 @@ class DevelopmentConfig(Config):
 
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'postgresql://username:password@hostname:port/dbname'
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
 
 
 config = {

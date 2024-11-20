@@ -12,6 +12,7 @@ REQUEST_COUNT = Counter('app_requests_toal', 'Total number of requests')
 REQUEST_LATENCY = Histogram('app_request_latency_seconds', 'Request latency in seconds')
 # Metric that maps the player_id to the number of times it was searched
 PLAYER_SEARCH_COUNT = Counter('player_search_count', 'Number of times a player was searched', ['player_id'])
+ERROR_COUNT = Counter('app_request_error_count', 'Total number of errors in requests')
 
 # Home route with a form to enter a player ID
 @bp.route('/', methods=['GET', 'POST'])
@@ -83,7 +84,7 @@ def metrics():
 
 @bp.route('/health')
 def health():
-    return Response('Ok', status=200)
+    return Response("ok", status=200)
 
 # Middleware to track metric data before requests occur
 @bp.before_request
@@ -102,5 +103,9 @@ def after_request(response):
     player_id = request.args.get('player_id')
     if player_id:
         PLAYER_SEARCH_COUNT.labels(player_id).inc()
+
+    if response.status_code == 404:
+        response.data = b'Player not found'
+        ERROR_COUNT.inc()
 
     return response 
