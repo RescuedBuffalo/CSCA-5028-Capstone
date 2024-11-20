@@ -10,11 +10,16 @@ db = SQLAlchemy()
 def create_app(config_name=None):
     app = Flask(__name__)
 
+    print(f"DATABASE_URL: {app.config.get('SQLALCHEMY_DATABASE_URI')}")
+
     # Apply the configuration to the app based on the passed config name
     if config_name:
         app.config.from_object(config[config_name])
     else:
         app.config.from_object(config['default'])  # Fallback to default config
+
+    if not app.config.get('SQLALCHEMY_DATABASE_URI'):
+        raise RuntimeError('No configuration set for Database URI.')
 
     db.init_app(app)
     Migrate(app, db)
