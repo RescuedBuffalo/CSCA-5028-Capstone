@@ -17,6 +17,7 @@ packaging==24.1
 pluggy==1.5.0
 polars==1.9.0
 prometheus_client==0.21.0
+prometheus_flask_exporter==0.23.1
 psycopg2-binary==2.9.9
 pytest==8.3.3
 pytest-mock==3.14.0
