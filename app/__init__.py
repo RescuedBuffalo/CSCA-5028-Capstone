@@ -1,7 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from config import config  # Import your config
+from config import config 
+from prometheus_flask_exporter import PrometheusMetrics
 
 db = SQLAlchemy()
 
@@ -16,6 +17,9 @@ def create_app(config_name=None):
 
     db.init_app(app)
     Migrate(app, db)
+
+    metrics = PrometheusMetrics(app)
+    metrics.info('app_info', 'Application info', version='1.0.0')
 
     from app.routes import bp as main_blueprint
     app.register_blueprint(main_blueprint)
