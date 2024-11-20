@@ -46,3 +46,18 @@ class GameLog(db.Model):
 
     def __repr__(self):
         return f'<GameLog {self.player_id} - {self.game_date}>'
+    
+class Team(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    team_id = db.Column(db.Integer, unique=True, nullable=False)
+    franchise_id = db.Column(db.Integer, unique=True, nullable=False)
+    full_name = db.Column(db.String(100), nullable=False)
+    raw_tricode = db.Column(db.String(3), nullable=False)
+    tricode = db.Column(db.String(3), nullable=False)
+    league_id = db.Column(db.Integer, nullable=False)
+
+class Roster(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    player_id = db.Column(db.Integer, db.ForeignKey('player.player_id', name='fk_player_player_id'), nullable=False)
+    team_id = db.Column(db.Integer, db.ForeignKey('team.team_id', name='fk_team_team_id'), nullable=False)
+    season = db.Column(db.String(8), nullable=False)
