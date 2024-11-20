@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, Respon
 from app.utils.nhl_api import get_nhl_player_stats
 from app.utils.analysis import analyze_player_performance
 from app.models import Player, GameLog
-from prometheus_client import generate_latest, CollectorRegistry, CONTENT_TYPE_LATEST, Counter, Histogram
+from prometheus_client import generate_latest, CONTENT_TYPE_LATEST, REGISTRY, Counter, Histogram
 import time
 
 
@@ -77,9 +77,7 @@ def player_profile(player_id):
 # Route to expose the metrics
 @bp.route('/metrics')
 def metrics():
-    registry = CollectorRegistry()
-
-    data = generate_latest(registry)
+    data = generate_latest(REGISTRY)
     return Response(data, content_type=CONTENT_TYPE_LATEST, status=200)
 
 @bp.route('/health')
