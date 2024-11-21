@@ -48,7 +48,7 @@ def upgrade():
     op.create_table('team',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('team_id', sa.Integer(), nullable=False),
-    sa.Column('franchise_id', sa.Integer(), nullable=False),
+    sa.Column('franchise_id', sa.Integer(), nullable=True),
     sa.Column('full_name', sa.String(length=100), nullable=False),
     sa.Column('raw_tricode', sa.String(length=3), nullable=False),
     sa.Column('tricode', sa.String(length=3), nullable=False),
