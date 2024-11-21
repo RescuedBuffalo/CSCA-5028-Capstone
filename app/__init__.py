@@ -12,11 +12,15 @@ def create_app(config_name=None):
     app = Flask(__name__)
 
     # Apply the configuration to the app based on the passed config name
-    if config_name:
+    if config_name != None:
         app.config.from_object(config[config_name])
+        print('CONFIG TYPE: ', type(config[config_name]))
         app.config['SQLALCHEMY_DATABASE_URI'] = config[config_name].SQLALCHEMY_DATABASE_URI
+        print('Env was: ', os.getenv('SQLALCHEMY_DATABASE_URI'))
+        print(f'used: {config[config_name].SQLALCHEMY_DATABASE_URI}')
 
     else:
+        print('falling back')
         app.config.from_object(config['default'])  # Fallback to default config
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dev.db'
 

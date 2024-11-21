@@ -4,6 +4,7 @@ from app.utils.analysis import analyze_player_performance
 from app.models import Player, GameLog
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST, REGISTRY, Counter, Histogram
 import time
+import os
 
 
 # Create a blueprint for the routes
@@ -13,6 +14,7 @@ REQUEST_LATENCY = Histogram('app_request_latency_seconds', 'Request latency in s
 # Metric that maps the player_id to the number of times it was searched
 PLAYER_SEARCH_COUNT = Counter('player_search_count', 'Number of times a player was searched', ['player_id'])
 ERROR_COUNT = Counter('app_request_error_count', 'Total number of errors in requests')
+DATABASE_CONNECTIONS = Counter('database_connection_count', 'Number of times a connection to the database was made', ['database'])
 
 # Home route with a form to enter a player ID
 @bp.route('/', methods=['GET', 'POST'])
@@ -89,6 +91,7 @@ def health():
 def before_request():
     REQUEST_COUNT.inc()
     request.start_time = time.time()
+    DATABASE_CONNECTIONS.labels((os.getenv('SQLALCHEMY_DATABASE_URI'))).inc()
 
 # Middleware to track metric data after requests occur
 @bp.after_request
