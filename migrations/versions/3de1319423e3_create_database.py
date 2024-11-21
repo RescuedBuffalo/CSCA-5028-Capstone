@@ -54,7 +54,6 @@ def upgrade():
     sa.Column('tricode', sa.String(length=3), nullable=False),
     sa.Column('league_id', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('franchise_id'),
     sa.UniqueConstraint('team_id')
     )
     op.create_table('game_log',
