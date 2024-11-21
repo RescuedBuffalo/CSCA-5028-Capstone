@@ -1,14 +1,19 @@
 from app import db, create_app
-from app.models import Player
+from app.models import Player, Roster
 from app.utils.nhl_api import get_nhl_player_stats
 from app.utils.analysis import analyze_player_performance
 import os
 from dotenv import load_dotenv
 
+
 def fetch_and_store_player_data():
-    player_ids = [8478402, 8477934, 8475786]  # Example player IDs
+
+
+    player_ids = db.session.query(Roster.player_id).distinct().all()
     
     for player_id in player_ids:
+        player_id = player_id[0]
+
         player_data = get_nhl_player_stats(player_id)
 
         if player_data:
@@ -17,7 +22,7 @@ def fetch_and_store_player_data():
             # Check if the player already exists in the database
             existing_player = Player.query.filter_by(player_id=player_id).first()
 
-            if existing_player:
+            if existing_player and processed_data.get("career_stats", None) != None:
                 # Update the existing player
                 existing_player.first_name = processed_data["player_info"]["first_name"]
                 existing_player.last_name = processed_data["player_info"]["last_name"]
