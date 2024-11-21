@@ -7,7 +7,7 @@ An NHL stats dashboard built for the CSCA-5028 Capstone project. This applicatio
 - **Player Statistics**: View detailed player performance metrics.
 - **Game Data**: Analyze recent and historical game stats.
 - **Standings**: Track team performance throughout the season.
-- **Monitoring**: Integrated Prometheus and Grafana for real-time monitoring of app performance.
+- **Monitoring**: Integrated Prometheus and Grafana for real-time monitoring of app performance (see [this repo](https://github.com/RescuedBuffalo/nhl-reporting-prometheus)).
 - **Event-driven Forecasting**: A planned feature to predict player performance using advanced machine learning models.
 
 ## Setup Instructions
