@@ -14,7 +14,7 @@ def create_app(config_name=None):
     # Apply the configuration to the app based on the passed config name
     if config_name:
         app.config.from_object(config[config_name])
-        app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
+        app.config['SQLALCHEMY_DATABASE_URI'] = config[config_name].SQLALCHEMY_DATABASE_URI
 
     else:
         app.config.from_object(config['default'])  # Fallback to default config
