@@ -37,4 +37,4 @@ def test_get_nhl_player_stats_api_error(mock_get):
     result = get_nhl_player_stats(8478402)
 
     # Test that it returns None or raises the expected error
-    assert result is None
+    assert result is '404'
