@@ -50,7 +50,7 @@ class GameLog(db.Model):
 class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     team_id = db.Column(db.Integer, unique=True, nullable=False)
-    franchise_id = db.Column(db.Integer, unique=True, nullable=False)
+    franchise_id = db.Column(db.Integer, nullable=True)
     full_name = db.Column(db.String(100), nullable=False)
     raw_tricode = db.Column(db.String(3), nullable=False)
     tricode = db.Column(db.String(3), nullable=False)
