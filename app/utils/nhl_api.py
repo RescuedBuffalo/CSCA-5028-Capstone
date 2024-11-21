@@ -7,7 +7,7 @@ def get_nhl_player_stats(player_id):
     if response.status_code == 200:
         return response.json()
     else: 
-        return None
+        return '404'
     
 def get_nhl_teams():
     url = 'https://api.nhle.com/stats/rest/en/team'
@@ -16,13 +16,14 @@ def get_nhl_teams():
     if response.status_code == 200:
         return response.json()
     else:
-        return None
+        return '404'
     
 def get_nhl_team_roster_by_season(team, season):
-    url = 'https://api-web.nhle.com/v1/roster/{team}/{season}'
+    url = f'https://api-web.nhle.com/v1/roster/{team}/{season}'
+
     response = requests.get(url)
 
     if response.status_code == 200:
         return response.json()
     else:
-        return None
+        return '404'
