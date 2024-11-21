@@ -58,7 +58,7 @@ The application integrates Prometheus and Grafana for monitoring.
 
 - **Prometheus**:
   - Collects metrics from the `/metrics` endpoint.
-  - Configuration file: `prometheus.yml`.
+  - Configuration file: `prometheus.yml` in Prometheus Repo [here](https://github.com/RescuedBuffalo/nhl-reporting-prometheus).
 
 - **Grafana**:
   - Access dashboards for real-time insights.
