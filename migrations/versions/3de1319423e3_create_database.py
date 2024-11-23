@@ -79,8 +79,6 @@ def upgrade():
     sa.Column('player_id', sa.Integer(), nullable=False),
     sa.Column('team_id', sa.Integer(), nullable=False),
     sa.Column('season', sa.String(length=8), nullable=False),
-    sa.ForeignKeyConstraint(['player_id'], ['player.player_id'], name='fk_player_player_id'),
-    sa.ForeignKeyConstraint(['team_id'], ['team.team_id'], name='fk_team_team_id'),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###

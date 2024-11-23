@@ -58,6 +58,6 @@ class Team(db.Model):
 
 class Roster(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    player_id = db.Column(db.Integer, db.ForeignKey('player.player_id', name='fk_player_player_id'), nullable=False)
-    team_id = db.Column(db.Integer, db.ForeignKey('team.team_id', name='fk_team_team_id'), nullable=False)
+    player_id = db.Column(db.Integer, nullable=False)
+    team_id = db.Column(db.Integer, nullable=False)
     season = db.Column(db.String(8), nullable=False)
