@@ -93,7 +93,6 @@ def callback(ch, method, properties, body):
 def main():
     global connection, channel
 
-    # Setup RabbitMQ connection and channel
     rabbitmq_url = os.getenv("RABBITMQ_URL")
     parameters = pika.URLParameters(rabbitmq_url)
 
@@ -121,9 +120,7 @@ def main():
         graceful_shutdown(None, None)
 
 if __name__ == "__main__":
-    # Handle termination signals for graceful shutdown
     signal.signal(signal.SIGINT, graceful_shutdown)
     signal.signal(signal.SIGTERM, graceful_shutdown)
 
-    # Run the main worker loop
     main()
