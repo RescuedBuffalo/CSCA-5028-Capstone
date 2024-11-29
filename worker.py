@@ -6,7 +6,10 @@ from dotenv import load_dotenv
 import ssl
 import json
 from datetime import datetime
-from scripts import fetch_player_data, fetch_team_data, fetch_roster_data, fetch_game_data
+from scripts.fetch_player_data import fetch_player_data
+from scripts.fetch_team_data import fetch_team_data
+from scripts.fetch_roster_data import fetch_roster_data
+from scripts.fetch_game_data import fetch_game_data
 
 load_dotenv('.env')
 
@@ -29,9 +32,11 @@ def graceful_shutdown(signum, frame):
 
 def process_task(ch, method, properties, body):
     """
-    Callback function to process messages.
+    Function to process messages.
     """
+
     message = json.loads(body)
+
     if message['task'] == 'fetch_player_data':
         fetch_player_data()
         print('Fetched player data.')
@@ -45,11 +50,13 @@ def process_task(ch, method, properties, body):
         fetch_game_data()
         print('Fetched game data.')
         
-    print(f"Received message: {body.decode()}")
-    ch.basic_ack(delivery_tag=method.delivery_tag)
+    print(f"Received message: {message.get('task')}")
 
-def publish_next_task(channel, current_task):
+def publish_next_task(channel, body):
     task_order = ['fetch_team_data', 'fetch_roster_data', 'fetch_player_data', 'fetch_game_data']
+
+    message = json.loads(body)
+    current_task = message['task']
 
     if current_task in task_order:
         current_index = task_order.index(current_task)
@@ -61,10 +68,12 @@ def publish_next_task(channel, current_task):
                 'timestamp': datetime.now().isoformat()
             }
 
+            body = json.dumps(task)
+
             channel.basic_publish(
                 exchange='',
                 routing_key='data_collection',
-                body=json.dumps(task),
+                body=body.encode('utf-8'),
                 properties=pika.BasicProperties(
                     delivery_mode=2,
                 )
@@ -73,12 +82,11 @@ def publish_next_task(channel, current_task):
             print(f"Published next task: {task}")
 
 def callback(ch, method, properties, body):
-    task = json.loads(body)
-    task_name = task.get('task')
+    body = body.decode('utf-8')
 
-    process_task(task_name)
+    process_task(ch, method, properties, body)
 
-    publish_next_task(ch, task_name)
+    publish_next_task(ch, body)
 
     ch.basic_ack(delivery_tag=method.delivery_tag)
 

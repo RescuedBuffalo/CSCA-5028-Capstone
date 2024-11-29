@@ -6,16 +6,21 @@ class Config:
 
 
 class DevelopmentConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///dev.db'  # Local SQLite for development
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///dev.db' 
 
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
 
+class TestingConfig(Config):
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:' 
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
 
 config = {
     'development': DevelopmentConfig,
     'production': ProductionConfig,
-    'testing': DevelopmentConfig,
+    'testing': TestingConfig,
     'default': DevelopmentConfig
 }

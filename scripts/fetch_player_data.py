@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 
 
-def fetch_and_store_player_data():
+def fetch_player_data():
 
 
     player_ids = db.session.query(Roster.player_id).distinct().all()
@@ -90,4 +90,4 @@ app = create_app(config_name=config_name)
 
 if __name__ == '__main__':
     with app.app_context():
-        fetch_and_store_player_data()
+        fetch_player_data()

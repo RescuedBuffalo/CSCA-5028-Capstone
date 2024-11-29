@@ -4,7 +4,7 @@ from app.models import Player, GameLog
 import os
 from dotenv import load_dotenv
 
-def fetch_player_game_logs():
+def fetch_game_data():
     players = Player.query.all()
     season = "20242025"  # You can set the current season dynamically if needed
     sub_season = "2"  # 2 for regular season, 3 for playoffs
@@ -58,4 +58,4 @@ app = create_app(config_name=config_name)
 if __name__ == '__main__':
     # Use the app context to ensure the database session is available
     with app.app_context():
-        fetch_player_game_logs()
+        fetch_game_data()

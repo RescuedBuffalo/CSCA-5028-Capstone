@@ -4,19 +4,7 @@ from datetime import datetime
 import os
 import ssl
 
-def publish_message():
-    rabbitmq_url = os.getenv("RABBITMQ_URL")
-
-    parameters = pika.URLParameters(rabbitmq_url)
-    
-    context = ssl.create_default_context()
-    context.check_hostname = False
-    context.verify_mode = ssl.CERT_NONE
-
-    connection = pika.BlockingConnection(parameters)
-    channel = connection.channel()
-
-    channel.queue_declare(queue='data_collection', durable=True)
+def publish_task(channel, connection):
 
     task = {
         'task': 'fetch_team_data',
@@ -36,5 +24,24 @@ def publish_message():
 
     connection.close()
 
+def connect():
+    rabbitmq_url = os.getenv("RABBITMQ_URL")
+
+    parameters = pika.URLParameters(rabbitmq_url)
+    
+    context = ssl.create_default_context()
+    context.check_hostname = False
+    context.verify_mode = ssl.CERT_NONE
+
+    connection = pika.BlockingConnection(parameters)
+    channel = connection.channel()
+
+    channel.queue_declare(queue='data_collection', durable=True)
+
+    return channel, connection
+
 if __name__ == "__main__":
-    publish_message()
+
+    channel, connection = connect()
+
+    publish_task(channel, connection)
