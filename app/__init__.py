@@ -8,7 +8,7 @@ import os
 
 db = SQLAlchemy()
 
-def create_app(config_name=None):
+def create_app(config_name="production"):
     app = Flask(__name__)
 
     # Apply the configuration to the app based on the passed config name
