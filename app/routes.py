@@ -43,6 +43,7 @@ def index():
 # Route to display player profile from the database
 @bp.route('/player/<int:player_id>')
 def player_profile(player_id):
+    PLAYER_SEARCH_COUNT.labels(player_id).inc()
     player = Player.query.filter_by(player_id=player_id).first()
     game_logs = GameLog.query.filter_by(player_id=player_id).all()
 
@@ -99,11 +100,6 @@ def after_request(response):
     latency = time.time() - request.start_time
 
     REQUEST_LATENCY.observe(latency)
-
-    # Increment the player search count metric
-    player_id = request.args.get('player_id')
-    if player_id:
-        PLAYER_SEARCH_COUNT.labels(player_id).inc()
 
     if response.status_code == 404:
         response.data = b'Player not found'
