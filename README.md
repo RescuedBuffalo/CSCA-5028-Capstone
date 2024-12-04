@@ -58,7 +58,12 @@ The application integrates Prometheus and Grafana for monitoring.
 
 - **Prometheus**:
   - Collects metrics from the `/metrics` endpoint.
-  - Configuration file: `prometheus.yml` in Prometheus Repo [here](https://github.com/RescuedBuffalo/nhl-reporting-prometheus).
+  - Configuration file: `prometheus.yml`
+  - Run `prometheus --config.file=prometheus.yml` from the root directory
+  - Access prometheus at `http://localhost:9090/`
+    - Try `database_connection_count_created`
+    - Try `app_request_latency_seconds_created` as a Histogram in the Graph tab
+    - Use autocomplete to find other metrics!
 
 - **Grafana**:
   - Access dashboards for real-time insights.
