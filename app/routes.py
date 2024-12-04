@@ -5,6 +5,7 @@ from app.models import Player, GameLog
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST, REGISTRY, Counter, Histogram
 import time
 import os
+import logging as LOGGER
 
 
 # Create a blueprint for the routes
@@ -43,7 +44,12 @@ def index():
 # Route to display player profile from the database
 @bp.route('/player/<int:player_id>')
 def player_profile(player_id):
-    PLAYER_SEARCH_COUNT.labels(player_id).inc()
+    try:
+        if player_id and Player.query.filter_by(player_id=player_id).first():
+            PLAYER_SEARCH_COUNT.labels(player_id=player_id).inc()
+    except Exception as e:
+        LOGGER.error(f"Error incrementing player search count: {e}")
+
     player = Player.query.filter_by(player_id=player_id).first()
     game_logs = GameLog.query.filter_by(player_id=player_id).all()
 
@@ -90,19 +96,26 @@ def health():
 # Middleware to track metric data before requests occur
 @bp.before_request
 def before_request():
+    if request.endpoint == 'metrics':
+        return
+    
     REQUEST_COUNT.inc()
     request.start_time = time.time()
-    DATABASE_CONNECTIONS.labels((os.getenv('SQLALCHEMY_DATABASE_URI'))).inc()
+
+    if request.endpoint == 'main.player_profile':
+        DATABASE_CONNECTIONS.labels(database=os.getenv('SQLALCHEMY_DATABASE_URI')).inc()
 
 # Middleware to track metric data after requests occur
 @bp.after_request
 def after_request(response):
+    if request.endpoint == 'metrics':
+        return
+    
     latency = time.time() - request.start_time
 
     REQUEST_LATENCY.observe(latency)
 
-    if response.status_code == 404:
-        response.data = b'Player not found'
+    if response.status_code == 404 and request.endpoint == 'main.player_profile':
         ERROR_COUNT.inc()
 
     return response 
