@@ -1,7 +1,12 @@
 global:
-  scrape_interval: 15s
+  scrape_interval: 150s
+  evaluation_interval: 150s 
 
 scrape_configs:
-  - job_name: "flask-dev"
+  - job_name: 'prometheus'
     static_configs:
-    - targets: ["localhost:5000"]
+      - targets: ['localhost:9090']
+
+  - job_name: 'nhl-reporting-app'
+    static_configs:
+      - targets: ['nhl-reporting-app-b1fe017be8db.herokuapp.com:80']
