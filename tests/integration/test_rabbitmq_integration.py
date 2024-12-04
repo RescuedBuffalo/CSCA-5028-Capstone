@@ -7,11 +7,21 @@ import ssl
 import os
 import time
 from app import create_app
+from dotenv import load_dotenv
 
+@pytest.fixture
+def client():
+    load_dotenv('.env__prod', override=True)
 
-def test_rabbitmq_integration():
-    with create_app("testing").app_context():
-        rabbitmq_url = os.getenv("RABBITMQ_URL")
+    app = create_app('production')
+    app.config['TESTING'] = True
+
+    yield app.test_client()
+
+def test_rabbitmq_integration(client):
+
+    with client.application.app_context():
+        rabbitmq_url = client.application.config.get("RABBITMQ_URL")
         if not rabbitmq_url:
             pytest.fail("Environment variable RABBITMQ_URL is not set.")
 
