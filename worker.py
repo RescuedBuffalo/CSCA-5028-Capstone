@@ -6,10 +6,10 @@ from dotenv import load_dotenv
 import ssl
 import json
 from datetime import datetime
-from scripts.fetch_player_data import fetch_player_data
-from scripts.fetch_team_data import fetch_team_data
-from scripts.fetch_roster_data import fetch_roster_data
-from scripts.fetch_game_data import fetch_game_data
+from app.scripts.fetch_player_data import fetch_player_data
+from app.scripts.fetch_team_data import fetch_team_data
+from app.scripts.fetch_roster_data import fetch_roster_data
+from app.scripts.fetch_game_data import fetch_game_data
 
 load_dotenv('.env')
 
