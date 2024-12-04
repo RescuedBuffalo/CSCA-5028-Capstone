@@ -11,7 +11,7 @@ import logging as LOGGER
 # Create a blueprint for the routes
 bp = Blueprint('main', __name__)
 REQUEST_COUNT = Counter('app_requests_toal', 'Total number of requests')
-REQUEST_LATENCY = Histogram('app_request_latency_seconds', 'Request latency in seconds')
+REQUEST_LATENCY = Histogram('app_request_latency_seconds', 'Request latency in seconds', buckets=[0.1, 0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 # Metric that maps the player_id to the number of times it was searched
 PLAYER_SEARCH_COUNT = Counter('player_search_count', 'Number of times a player was searched', ['player_id'])
 ERROR_COUNT = Counter('app_request_error_count', 'Total number of errors in requests')
@@ -45,8 +45,8 @@ def index():
 @bp.route('/player/<int:player_id>')
 def player_profile(player_id):
     try:
-        if player_id and Player.query.filter_by(player_id=player_id).first():
-            PLAYER_SEARCH_COUNT.labels(player_id=player_id).inc()
+        PLAYER_SEARCH_COUNT.labels(player_id=player_id).inc()
+        DATABASE_CONNECTIONS.labels(database=os.getenv('SQLALCHEMY_DATABASE_URI')).inc()
     except Exception as e:
         LOGGER.error(f"Error incrementing player search count: {e}")
 
@@ -83,7 +83,6 @@ def player_profile(player_id):
 
     return render_template('report.html', player_info=player_info, game_logs=game_logs)
 
-# Route to expose the metrics
 @bp.route('/metrics')
 def metrics():
     data = generate_latest(REGISTRY)
@@ -93,7 +92,6 @@ def metrics():
 def health():
     return Response("ok", status=200)
 
-# Middleware to track metric data before requests occur
 @bp.before_request
 def before_request():
     if request.endpoint == 'metrics':
@@ -102,10 +100,6 @@ def before_request():
     REQUEST_COUNT.inc()
     request.start_time = time.time()
 
-    if request.endpoint == 'main.player_profile':
-        DATABASE_CONNECTIONS.labels(database=os.getenv('SQLALCHEMY_DATABASE_URI')).inc()
-
-# Middleware to track metric data after requests occur
 @bp.after_request
 def after_request(response):
     if request.endpoint == 'metrics':
