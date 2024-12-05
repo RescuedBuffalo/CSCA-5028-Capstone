@@ -1,6 +1,6 @@
 import pytest
 import pika
-import worker, producer
+import worker
 from datetime import datetime
 from json import loads, dumps
 import ssl
@@ -11,17 +11,16 @@ from dotenv import load_dotenv
 
 @pytest.fixture
 def client():
-    load_dotenv('.env__prod', override=True)
+    load_dotenv()
 
-    app = create_app('production')
-    app.config['TESTING'] = True
+    app = create_app('testing')
 
     yield app.test_client()
 
 def test_rabbitmq_integration(client):
 
     with client.application.app_context():
-        rabbitmq_url = client.application.config.get("RABBITMQ_URL")
+        rabbitmq_url = os.getenv("RABBITMQ_URL")
         if not rabbitmq_url:
             pytest.fail("Environment variable RABBITMQ_URL is not set.")
 
@@ -57,7 +56,7 @@ def test_rabbitmq_integration(client):
             try:
                 # Decode the body and append it to processed_tasks
                 processed_tasks.append(loads(body.decode()))  # Decode JSON message
-
+                print('PROCESSING TASK {}'.format(processed_tasks))
                 # Pass the raw body to `worker.process_task` as expected
                 worker.process_task(ch, method, properties, body)
 

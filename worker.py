@@ -37,15 +37,16 @@ def process_task(ch, method, properties, body):
 
     message = json.loads(body)
 
-    if message['task'] == 'fetch_player_data':
-        fetch_player_data()
-        print('Fetched player data.')
-    elif message['task'] == 'fetch_team_data':
+    if message['task'] == 'fetch_team_data':
+        print('Fetching team data...')
         fetch_team_data()
         print('Fetched team data.')
     elif message['task'] == 'fetch_roster_data':
         fetch_roster_data()
         print('Fetched roster data.')
+    elif message['task'] == 'fetch_player_data':
+        fetch_player_data()
+        print('Fetched player data.')
     elif message['task'] == 'fetch_game_data':
         fetch_game_data()
         print('Fetched game data.')

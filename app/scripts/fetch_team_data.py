@@ -9,18 +9,23 @@ def fetch_team_data():
     teams = get_nhl_teams()['data']
 
     for team in teams:
-        existing_team = Team.query.filter_by(team_id=team['id']).first()
+        try:
+            existing_team = Team.query.filter_by(team_id=team['id']).first()
+        except Exception as e:
+            existing_team = None
+            print(f"Error querying Team table.")
 
-        if not existing_team:
-            new_team = Team(
-                team_id=team['id'],
-                franchise_id=team['franchiseId'],
-                full_name=team['fullName'],
-                raw_tricode=team['rawTricode'],
-                tricode=team['triCode'],
-                league_id=team['leagueId']
-            )
-            db.session.add(new_team)
+    if not existing_team:
+        print('Add new team...')
+        new_team = Team(
+            team_id=team['id'],
+            franchise_id=team['franchiseId'],
+            full_name=team['fullName'],
+            raw_tricode=team['rawTricode'],
+            tricode=team['triCode'],
+            league_id=team['leagueId']
+        )
+        db.session.add(new_team)
 
     try:
         db.session.commit()

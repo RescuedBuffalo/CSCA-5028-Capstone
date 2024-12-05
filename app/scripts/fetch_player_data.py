@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 
 
-def fetch_player_data():
+def fetch_player_data(config='production'):
 
 
     player_ids = db.session.query(Roster.player_id).distinct().all()
@@ -82,12 +82,12 @@ def fetch_player_data():
         print(f"Error saving data: {e}")
         db.session.close()
 
-load_dotenv('.env')
-
-config_name = os.getenv('CONFIG_NAME')
-
-app = create_app(config_name=config_name)
-
 if __name__ == '__main__':
+    load_dotenv('.env')
+
+    config_name = os.getenv('CONFIG_NAME')
+
+    app = create_app(config_name=config_name)
+    
     with app.app_context():
         fetch_player_data()

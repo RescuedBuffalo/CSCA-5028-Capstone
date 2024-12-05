@@ -25,6 +25,32 @@ class Player(db.Model):
     shooting_pct = db.Column(db.Float, nullable=False)
     avg_toi = db.Column(db.String(10), nullable=False)
 
+    def to_dict(self):
+        return {
+            'player_id': self.player_id,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'team_name': self.team_name,
+            'position': self.position,
+            'jersey_number': self.jersey_number,
+            'headshot': self.headshot,
+            'birth_city': self.birth_city,
+            'birth_province': self.birth_province,
+            'birth_country': self.birth_country,
+            'height_in_inches': self.height_in_inches,
+            'weight_in_pounds': self.weight_in_pounds,
+            'points_per_game': self.points_per_game,
+            'goals_per_game': self.goals_per_game,
+            'games_played': self.games_played,
+            'goals': self.goals,
+            'assists': self.assists,
+            'points': self.points,
+            'shots': self.shots,
+            'power_play_goals': self.power_play_goals,
+            'shooting_pct': self.shooting_pct,
+            'avg_toi': self.avg_toi
+        }
+
     def __repr__(self):
         return f'<Player {self.first_name} {self.last_name}>'
     

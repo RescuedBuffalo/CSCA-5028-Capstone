@@ -8,7 +8,6 @@ def client():
     app = create_app()
     app.config['TESTING'] = True
     app.config['SERVER_NAME'] = 'localhost'  # Set SERVER_NAME for testing
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'  # Use in-memory SQLite for tests
 
     with app.app_context():
         db.create_all()

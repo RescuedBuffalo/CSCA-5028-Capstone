@@ -84,3 +84,15 @@ The application integrates Prometheus and Grafana for monitoring.
 - GitHub Actions is set up for CI/CD.
 - Successful builds are automatically deployed to Heroku.
 
+## TODOS:
+- Use Database in nhl_api.py functions rather than external API.
+- Add more integration tests
+- Fininsh Messaging Queue integration
+- Improve Analyzer API
+- Improve UI a Little
+- Update ReadMe and Internal Documentation More
+- High Level Report
+    - Whiteboard Diagram + Description
+    - Justification for Design Decisions
+        Ex) Why Postgres? Why Heroku?
+    - System Requirements + How Testable They Were

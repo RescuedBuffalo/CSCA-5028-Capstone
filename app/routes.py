@@ -30,7 +30,6 @@ def index():
         player_data = get_nhl_player_stats(player_id)
 
         if player_data:
-            analyzed_data = analyze_player_performance(player_data)
             # Redirect to the player_profile route using the blueprint's name
             return redirect(url_for('main.player_profile', player_id=player_id))
         else:
@@ -42,7 +41,7 @@ def index():
 
 
 # Route to display player profile from the database
-@bp.route('/player/<int:player_id>')
+@bp.route('/player/<int:player_id>', methods=['GET'])
 def player_profile(player_id):
     try:
         PLAYER_SEARCH_COUNT.labels(player_id=player_id).inc()
