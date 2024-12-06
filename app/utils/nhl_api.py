@@ -2,11 +2,12 @@ import requests
 from app.models import Player
 
 def get_nhl_player_stats(player_id):
-    player = Player.query.filter_by(player_id=player_id).first()
-    
-    if player:
-        return player.to_dict()
-    else:
+    url = f'https://api-web.nhle.com/v1/player/{player_id}/landing'
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        return response.json()
+    else: 
         return '404'
     
 def get_nhl_teams():

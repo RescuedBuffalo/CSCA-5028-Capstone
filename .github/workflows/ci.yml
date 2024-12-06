@@ -47,7 +47,7 @@ jobs:
           run: |
             source venv/bin/activate
             echo FLASK_ENV=testing >> .env
-            pytest integration/unit
+            pytest tests/integration
 
         - name: Deploy to Heroku
           uses: akhileshns/heroku-deploy@v3.13.15
