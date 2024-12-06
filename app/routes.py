@@ -27,7 +27,7 @@ def index():
             return render_template('index.html', error_message='Please provide a player ID.')
 
         # Fetch player data using the NHL API
-        player_data = get_nhl_player_stats(player_id)
+        player_data = Player.query.filter_by(player_id=player_id).first().to_dict()
 
         if player_data:
             # Redirect to the player_profile route using the blueprint's name
