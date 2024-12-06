@@ -1,7 +1,8 @@
 import pytest
 from unittest.mock import patch, MagicMock
 import pika
-import app.scripts.worker as worker, app.scripts.producer as producer
+import app.scripts.worker as worker
+import app.scripts.producer as producer
 from datetime import datetime
 from json import dumps
 from app import create_app, db
@@ -21,7 +22,7 @@ def test_produce_tasks(mock_rabbitmq_connection):
 
     assert mock_rabbitmq_connection.channel.basic_publish.call_count == 1
 
-@patch('worker.process_task')
+@patch('app.scripts.worker.process_task')
 def test_consume_tasks(mock_process_task, mock_rabbitmq_connection):
     mock_channel = mock_rabbitmq_connection.channel.return_value
 
