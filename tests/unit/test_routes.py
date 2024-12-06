@@ -27,6 +27,7 @@ def test_player_not_found(client):
     # Assert that the response returns the 404 status code
     assert response.status_code == 404
 
+
 def test_player_profile_found(client):
     # Create a dummy player in the test database
     player = Player(player_id=123, first_name='John', last_name='Doe', team_name='Sharks',
@@ -46,3 +47,9 @@ def test_player_profile_found(client):
     assert b'John Doe' in response.data
     assert b'Sharks' in response.data
     assert response.status_code == 200
+
+
+def test_produce_tasks(client):
+    response = client.get(url_for('main.produce_tasks'))
+    assert response.status_code == 200
+    assert b'Tasks successfully added to queue.' in response.data

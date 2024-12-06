@@ -25,23 +25,25 @@ def publish_task(channel, connection):
     connection.close()
 
 def connect():
-    rabbitmq_url = os.getenv("RABBITMQ_URL")
-
+    rabbitmq_url = os.getenv('RABBITMQ_URL')
     parameters = pika.URLParameters(rabbitmq_url)
-    
-    context = ssl.create_default_context()
-    context.check_hostname = False
-    context.verify_mode = ssl.CERT_NONE
+
+    # Skip SSL verification for testing
+    if os.getenv('CONFIG_NAME') == 'testing':
+        context = ssl.create_default_context()
+        context.check_hostname = False
+        context.verify_mode = ssl.CERT_NONE
+        parameters.ssl_options = pika.SSLOptions(context)
 
     connection = pika.BlockingConnection(parameters)
     channel = connection.channel()
-
-    channel.queue_declare(queue='data_collection', durable=True)
-
     return channel, connection
 
-if __name__ == "__main__":
-
+def main():
     channel, connection = connect()
 
     publish_task(channel, connection)
+
+if __name__ == "__main__":
+
+    main()

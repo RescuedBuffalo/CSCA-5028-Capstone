@@ -6,6 +6,7 @@ from prometheus_client import generate_latest, CONTENT_TYPE_LATEST, REGISTRY, Co
 import time
 import os
 import logging as LOGGER
+import app.scripts.producer as producer
 
 
 # Create a blueprint for the routes
@@ -81,6 +82,12 @@ def player_profile(player_id):
     }
 
     return render_template('report.html', player_info=player_info, game_logs=game_logs)
+
+# Create endpoint that runs producers.py to produce tasks in the queue
+@bp.route('/produce_tasks')
+def produce_tasks():
+    producer.main()
+    return Response("Tasks successfully added to queue.", status=200)
 
 @bp.route('/metrics')
 def metrics():
