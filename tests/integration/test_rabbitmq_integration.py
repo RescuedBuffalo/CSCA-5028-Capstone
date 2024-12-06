@@ -1,6 +1,6 @@
 import pytest
 import pika
-import worker
+import app.scripts.worker as worker
 from datetime import datetime
 from json import loads, dumps
 import ssl

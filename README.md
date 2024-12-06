@@ -85,11 +85,18 @@ The application integrates Prometheus and Grafana for monitoring.
 - Successful builds are automatically deployed to Heroku.
 
 ## TODOS:
-- Use Database in nhl_api.py functions rather than external API.
 - Add more integration tests
 - Fininsh Messaging Queue integration
+    - ~~Fix worker errors in prod~~
+    - Setup endpoint that calls producers.py
+    - Setup schedule Post to the producer endpoint
 - Improve Analyzer API
+    - Add Analyzer Endpoint
+    - Do some sort of basic analysis
 - Improve UI a Little
+    - Instead of search, add table of teams
+    - Then add table of players
+    - Then player profiles
 - Update ReadMe and Internal Documentation More
 - High Level Report
     - Whiteboard Diagram + Description

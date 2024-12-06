@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch, MagicMock
 import pika
-import worker, producer
+import app.scripts.worker as worker, app.scripts.producer as producer
 from datetime import datetime
 from json import dumps
 from app import create_app, db
