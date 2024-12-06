@@ -88,8 +88,8 @@ The application integrates Prometheus and Grafana for monitoring.
 - Add more integration tests
 - Fininsh Messaging Queue integration
     - ~~Fix worker errors in prod~~
-    - Setup endpoint that calls producers.py
-    - Setup schedule Post to the producer endpoint
+    - ~~Setup endpoint that calls producers.py~~
+    - ~~Setup schedule Post to the producer endpoint~~
 - Improve Analyzer API
     - Add Analyzer Endpoint
     - Do some sort of basic analysis
