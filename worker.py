@@ -10,8 +10,10 @@ from app.scripts.fetch_player_data import fetch_player_data
 from app.scripts.fetch_team_data import fetch_team_data
 from app.scripts.fetch_roster_data import fetch_roster_data
 from app.scripts.fetch_game_data import fetch_game_data
+from app import create_app
 
 load_dotenv('.env')
+app = create_app(os.getenv("CONFIG_NAME"))
 
 # Global variable to hold the connection
 connection = None
@@ -34,23 +36,23 @@ def process_task(ch, method, properties, body):
     """
     Function to process messages.
     """
-
     message = json.loads(body)
 
-    if message['task'] == 'fetch_team_data':
-        print('Fetching team data...')
-        fetch_team_data()
-        print('Fetched team data.')
-    elif message['task'] == 'fetch_roster_data':
-        fetch_roster_data()
-        print('Fetched roster data.')
-    elif message['task'] == 'fetch_player_data':
-        fetch_player_data()
-        print('Fetched player data.')
-    elif message['task'] == 'fetch_game_data':
-        fetch_game_data()
-        print('Fetched game data.')
-        
+    with app.app_context():  # Ensure the task runs within the app context
+        if message['task'] == 'fetch_team_data':
+            print('Fetching team data...')
+            fetch_team_data()
+            print('Fetched team data.')
+        elif message['task'] == 'fetch_roster_data':
+            fetch_roster_data()
+            print('Fetched roster data.')
+        elif message['task'] == 'fetch_player_data':
+            fetch_player_data()
+            print('Fetched player data.')
+        elif message['task'] == 'fetch_game_data':
+            fetch_game_data()
+            print('Fetched game data.')
+
     print(f"Received message: {message.get('task')}")
 
 def publish_next_task(channel, body):
