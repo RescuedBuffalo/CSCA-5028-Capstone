@@ -4,9 +4,8 @@ import requests
 
 @pytest.fixture
 def client():
-    app = create_app()
+    app = create_app('testing')
     app.config['TESTING'] = True
-    app.config['SERVER_NAME'] = 'localhost'  # Set SERVER_NAME for testing
 
     with app.test_client() as client:
         yield client

@@ -5,9 +5,9 @@ from flask import url_for
 
 @pytest.fixture
 def client():
-    app = create_app()
+    app = create_app('testing')
     app.config['TESTING'] = True
-    app.config['SERVER_NAME'] = 'localhost'  # Set SERVER_NAME for testing
+    app.config['SERVER_NAME'] = 'localhost'
 
     with app.app_context():
         db.create_all()
