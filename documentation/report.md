@@ -35,7 +35,10 @@ Additionally, I devised unit and integration tests to ensure that tasks were cor
 There were many non-functional requirements to this project, the key ones being performance, reliability and security. While not necessarily tests, monitoring in Prometheus and CI/CD setups in GitHub Actions were used to ensure these were safe.
 
 #### Prometheus for Performance
-I setup latency metrics to track the performance of requests, ensuring that the app is performant. 
+I setup latency metrics to track the performance of requests, ensuring that the app is performant.
+
+#### Testing for Performance and Reliability
+Created an integration test to hit the production server with simulated requests to load test it. Ensuring that there was 99% success rate and at least four second average response time for up to 100 concurrent users.
 
 #### GitHub Actions for Reliability
 Using GitHub Actions provided CI/CD, ensuring that code was only deployed to the server after all tests passed. This meant that the likelihood of a bug taking down the page was lower protecting site reliability.
