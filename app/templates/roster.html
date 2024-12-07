@@ -4,6 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Roster</title>
+    <style>
+        /* General styles for the page */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        main {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #00205B; /* Oilers blue */
+        }
+
+        /* Styling the table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #FC4C02; /* Oilers orange-gold */
+            color: white;
+            font-weight: bold;
+            border-bottom: 2px solid #00205B; /* Oilers blue */
+        }
+
+        td {
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Alternating row colors for better readability */
+        tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #e6f7ff; /* Light blue shade */
+        }
+
+        /* Hover effect for rows */
+        tbody tr:hover {
+            background-color: #d6eaff; /* Slightly darker blue */
+        }
+
+        /* Links inside the table */
+        a {
+            text-decoration: none;
+            color: #00205B; /* Oilers blue */
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: #FC4C02; /* Oilers orange-gold */
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #777;
+        }
+    </style>
 </head>
 <body>
 
@@ -22,14 +101,14 @@
                     {% if roster %}
                         {% for player in roster %}
                             <tr>
-                                <td>{{player.jersey_number}}</td>
-                                <td><a href="{{ url_for('main.player_profile', player_id=player.player_id) }}">{{ player.first_name }} {{player.last_name}}</a></td>
+                                <td>{{ player.jersey_number }}</td>
+                                <td><a href="{{ url_for('main.player_profile', player_id=player.player_id) }}">{{ player.first_name }} {{ player.last_name }}</a></td>
                                 <td>{{ player.points }}</td>
                             </tr>
                         {% endfor %}
                     {% else %}
                         <tr>
-                            <td colspan="4">No players found for this team.</td>
+                            <td colspan="3">No players found for this team.</td>
                         </tr>
                     {% endif %}
                 </tbody>
@@ -38,7 +117,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2024 NHL Stats</p>
+        <p>&copy; 2024 NHL Stats API</p>
     </footer>
 </body>
 </html>
