@@ -26,7 +26,7 @@ PRODUCER_SUCCEEDED = Counter('producer_succeeded_count', 'Number of times the pr
 @bp.route('/', methods=['GET'])
 def index():
     try:
-        teams = Team.query.all()
+        teams = Team.query.order_by(Team.full_name.asc()).all()
         DATABASE_CONNECTIONS.labels(database=os.getenv('SQLALCHEMY_DATABASE_URI')).inc()
         print(teams)
         return render_template('index.html', teams=teams), 200
@@ -41,7 +41,7 @@ def team_profile(team_id):
         player_ids = [player_id for (player_id,) in db.session.query(Roster.player_id).filter_by(team_id=team_id).distinct().all()]
         
         # Query the players using the flat list of IDs
-        roster_info = Player.query.filter(Player.player_id.in_(player_ids)).all()
+        roster_info = Player.query.filter(Player.player_id.in_(player_ids)).order_by(Player.last_name.asc()).all()
         
         DATABASE_CONNECTIONS.labels(database=os.getenv('SQLALCHEMY_DATABASE_URI')).inc()
         return render_template('roster.html', roster=roster_info), 200
