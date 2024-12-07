@@ -42,7 +42,12 @@ def connect():
 def main():
     channel, connection = connect()
 
-    publish_task(channel, connection)
+    try:
+        publish_task(channel, connection)
+        return 200
+    except Exception as e:
+        print(f"Error publishing task: {e}")
+        return 500
 
 if __name__ == "__main__":
 

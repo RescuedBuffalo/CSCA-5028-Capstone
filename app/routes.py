@@ -18,6 +18,7 @@ PLAYER_SEARCH_COUNT = Counter('player_search_count', 'Number of times a player w
 ERROR_COUNT = Counter('app_request_error_count', 'Total number of errors in requests')
 DATABASE_CONNECTIONS = Counter('database_connection_count', 'Number of times a connection to the database was made', ['database'])
 PRODUCER_TRIGGERED = Counter('producer_triggered_count', 'Number of times the producer was triggered')
+PRODUCER_SUCCEEDED = Counter('producer_succeeded_count', 'Number of times the producer succeeded')
 
 # Home route with a form to enter a player ID
 @bp.route('/', methods=['GET', 'POST'])
@@ -87,9 +88,14 @@ def player_profile(player_id):
 # Create endpoint that runs producers.py to produce tasks in the queue
 @bp.route('/produce_tasks')
 def produce_tasks():
-    producer.main()
+    response_code = producer.main()
     PRODUCER_TRIGGERED.inc()
-    return Response("Tasks successfully added to queue.", status=200)
+
+    if response_code != 200:
+        return Response("Failed to add tasks to queue.", status=response_code)
+    else:
+        PRODUCER_SUCCEEDED.inc()
+        return Response("Tasks successfully added to queue.", status=response_code)
 
 @bp.route('/metrics')
 def metrics():
