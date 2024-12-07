@@ -4,11 +4,10 @@ An NHL stats dashboard built for the CSCA-5028 Capstone project. This applicatio
 
 ## Features
 
-- **Player Statistics**: View detailed player performance metrics.
-- **Game Data**: Analyze recent and historical game stats.
-- **Standings**: Track team performance throughout the season.
+- **Player Statistics**: View career and season metrics for NHL players.
+- **Player Analyzer**: Simple analyze endpoint that calculates what current percentile the player is in based on their points. Using Heroku scheduler, I 
 - **Monitoring**: Integrated Prometheus and Grafana for real-time monitoring of app performance (see [this repo](https://github.com/RescuedBuffalo/nhl-reporting-prometheus)).
-- **Event-driven Forecasting**: A planned feature to predict player performance using advanced machine learning models.
+- **Event Queue**: Integrated Event Queue using pika and CloudAMQP in Heroku, there is a worker that runs on its own dyno. Using Heroku scheduler, I run `PYTONPATH=. app/scripts/trigger_produce.py` at midnight PST to have my producer endpoint add tasks to the queue to refresh data.
 
 ## Setup Instructions
 
@@ -23,7 +22,7 @@ An NHL stats dashboard built for the CSCA-5028 Capstone project. This applicatio
 2. **Set Up Virtual Environment**:
     ```bash
     python -m venv venv
-    source venv/bin/activate   # On Windows: venv\\Scripts\\activate
+    source venv/bin/activate
     ```
 
 3. **Install Dependencies**:
@@ -88,17 +87,18 @@ The application integrates Prometheus and Grafana for monitoring.
 
 ## TODOS:
 - Add more integration tests
-- Fininsh Messaging Queue integration
+- ~~Finish Messaging Queue integration~~
     - ~~Fix worker errors in prod~~
     - ~~Setup endpoint that calls producers.py~~
     - ~~Setup schedule Post to the producer endpoint~~
 - ~~Improve Analyzer API~~
     - ~~Add Analyzer Endpoint~~
     - ~~Do some sort of basic analysis~~
-- Improve UI a Little
-    - Instead of search, add table of teams
-    - Then add table of players
-    - Then player profiles
+- ~~Improve UI a Little~~
+    - ~~Instead of search, add table of teams~~
+    - ~~Then add table of players~~
+    - ~~Then player profiles~~
+- Add some more error protection
 - Update ReadMe and Internal Documentation More
 - High Level Report
     - Whiteboard Diagram + Description
