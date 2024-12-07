@@ -136,7 +136,7 @@ class Roster(db.Model):
 class PlayerRank(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     player_id = db.Column(db.Integer, nullable=False)
-    rank = db.Column(db.Integer, nullable=False)
+    rank = db.Column(db.Float, nullable=False)
 
     def to_dict(self):
         return {
