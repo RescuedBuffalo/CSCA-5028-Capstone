@@ -83,13 +83,13 @@ def populate_test_db():
 
         player_rank = PlayerRank(
             player_id=1,
-            rank=99
+            rank=0.99
         )
         db.session.add(player_rank)
 
         player_rank2 = PlayerRank(
             player_id=1,
-            rank=1
+            rank=0.01
         )
         db.session.add(player_rank2)
 
