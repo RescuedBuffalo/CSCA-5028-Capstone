@@ -1,6 +1,7 @@
 # CSCA-5028-Capstone
 
 An NHL stats dashboard built for the CSCA-5028 Capstone project. This application provides insightful analysis and visualizations of NHL player and game statistics.
+[Link to the GitHub Repo](https://github.com/RescuedBuffalo/CSCA-5028-Capstone)
 
 Check out the hosted version of the app if you don't feel like running it in development!
 
@@ -18,7 +19,7 @@ Check out the hosted version of the app if you don't feel like running it in dev
 ### Development Setup
 
 1. **Download Submitted ZIP**:
-    - Open terminal and navigate to unzipped root directory.
+    - Open terminal and navigate to unzipped root directory, the file is called `CSCA-5028-Capstone`.
 
 2. **Set Up Virtual Environment**:
     ```bash
