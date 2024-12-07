@@ -16,6 +16,7 @@ def analyze_player_performance(player_data):
         "birth_country": player_data["birthCountry"],
         "height_in_inches": player_data["heightInInches"],
         "weight_in_pounds": player_data["weightInPounds"],
+        "team_id": player_data["currentTeamId"]
     }
 
     # Extract career regular season stats

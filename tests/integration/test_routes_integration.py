@@ -11,21 +11,31 @@ def client():
     app = create_app('testing')
 
     with app.app_context():
+        db.drop_all()
+        db.create_all()
         populate_test_db()
 
     yield app.test_client()
 
 def test_player_lookup(client):
-    # simulate a user making a request on / and then the corresponding results on /player/{id}
-    # create a payload that is a form with player_id = 1
-    payload = {'player_id': 1}
-    response = client.post('/', data=payload, follow_redirects=True)
+    # Test to ensure the the homepage is populating with teams
+    response = client.get('/')
+    assert b'Test Team' in response.data
 
-    # assert that we were redirected to /player/8478402
-    assert response.status_code == 200
-    assert b"Player Stats" in response.data
+    # Get the team_id from the response
+    team_id = response.data.split(b'href="/team/')[1].split(b'"')[0].decode()
+    assert team_id == '9999'
 
-    # assert that the player's name is displayed
-    assert b"Test Player" in response.data
+    # Test to ensure we can get the team's roster
+    response = client.get(f'/team/9999')
+    assert b'Test Player' in response.data
+
+    # Get the player_id from the response
+    player_id = response.data.split(b'href="/player/')[1].split(b'"')[0].decode()
+    assert player_id == '1'
+
+    # Test to ensure we can get the player's profile
+    response = client.get(f'/player/{player_id}')
+    assert b'Test Player' in response.data
 
     

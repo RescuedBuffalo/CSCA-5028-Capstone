@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, Response
 from app.utils.nhl_api import get_nhl_player_stats
 from app.utils.analysis import analyze_player_performance
-from app.models import Player, GameLog, PlayerRank
+from app.models import Player, GameLog, PlayerRank, Roster, Team
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST, REGISTRY, Counter, Histogram
 import time
 import os
@@ -23,31 +23,32 @@ PRODUCER_TRIGGERED = Counter('producer_triggered_count', 'Number of times the pr
 PRODUCER_SUCCEEDED = Counter('producer_succeeded_count', 'Number of times the producer succeeded')
 
 # Home route with a form to enter a player ID
-@bp.route('/', methods=['GET', 'POST'])
+@bp.route('/', methods=['GET'])
 def index():
-    if request.method == 'POST':
-        player_id = request.form.get('player_id')
+    try:
+        teams = Team.query.all()
+        DATABASE_CONNECTIONS.labels(database=os.getenv('SQLALCHEMY_DATABASE_URI')).inc()
+        print(teams)
+        return render_template('index.html', teams=teams), 200
+    except Exception as e:
+        LOGGER.error(f"Error fetching teams: {e}")
+        return render_template('index.html', teams=None, error_message='Failed to fetch teams'), 404
 
-        if not player_id:
-            return render_template('index.html', error_message='Please provide a player ID.')
-
-        # Fetch player data using the NHL API
-        try:
-            player_data = Player.query.filter_by(player_id=player_id).first().to_dict()
-        except Exception as e:
-            LOGGER.error(f"Error fetching player data: {e}")
-            player_data = None
-
-        if player_data:
-            # Redirect to the player_profile route using the blueprint's name
-            return redirect(url_for('main.player_profile', player_id=player_id))
-        else:
-            error_message = f'Could not fetch data with player ID: {player_id}'
-            return render_template('index.html', error_message=error_message)
-
-    # Render the form when the request method is GET
-    return render_template('index.html')
-
+@bp.route('/team/<int:team_id>', methods=['GET'])
+def team_profile(team_id):
+    try:
+        # Extract player IDs as a flat list
+        player_ids = [player_id for (player_id,) in db.session.query(Roster.player_id).filter_by(team_id=team_id).distinct().all()]
+        
+        # Query the players using the flat list of IDs
+        roster_info = Player.query.filter(Player.player_id.in_(player_ids)).all()
+        
+        DATABASE_CONNECTIONS.labels(database=os.getenv('SQLALCHEMY_DATABASE_URI')).inc()
+        return render_template('roster.html', roster=roster_info), 200
+    
+    except Exception as e:
+        LOGGER.error(f"Error fetching team: {e}")
+        return render_template('roster.html', roster=None, error_message='Team not found'), 404
 
 # Route to display player profile from the database
 @bp.route('/player/<int:player_id>', methods=['GET'])

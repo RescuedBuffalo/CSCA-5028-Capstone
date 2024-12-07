@@ -1,15 +1,36 @@
 <!DOCTYPE html>
-<html lang="'en">
-    <head>
-        <meta charset="'UTF-8">
-        <title>NHL Stats</title>
-    </head>
-    <body>
-        <h1>Enter Player ID</h1>
-        <form method="POST">
-            <label for="player_id">Player ID:</label>
-            <input type="text" name="player_id" id="player_id">
-            <button type="submit">Get Stats</button>
-        </form>
-    </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NHL Teams</title>
+</head>
+<body>
+    <header>
+        <h1>Welcome to the NHL Stats Page</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2>All Teams</h2>
+            <ul>
+                {% if teams %}
+                    {% for team in teams %}
+                        <li>
+                            <a href="{{ url_for('main.team_profile', team_id=team.team_id) }}" >{{ team['full_name'] }}</a>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li>
+                        <a href="#">Missing</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; Source: NHL Stats API</p>
+    </footer>
+</body>
 </html>

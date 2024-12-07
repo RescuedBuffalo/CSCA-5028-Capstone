@@ -2,6 +2,7 @@ import pytest
 from app import create_app, db
 from app.models import Player, PlayerRank
 from flask import url_for
+from app.scripts.setup_test_db import populate_test_db
 
 @pytest.fixture
 def client():
@@ -11,9 +12,31 @@ def client():
 
     with app.app_context():
         db.create_all()
-        yield app.test_client()
-        db.session.remove()
         db.drop_all()
+
+        populate_test_db()
+        yield app.test_client()
+
+
+def test_team_table(client):
+    # Test to ensure the the homepage is populating with teams
+    with client.application.app_context():
+        response = client.get(url_for('main.index'))
+
+    # write response.data to a file
+    with open('response.data', 'wb') as f:
+        f.write(response.data)
+
+    assert b'Test Team' in response.data
+
+def test_team_table_empty(client):
+    # Test to ensure the the homepage is populating with teams
+    with client.application.app_context():
+        db.drop_all()
+        response = client.get(url_for('main.index'))
+
+    assert response.status_code == 404
+    assert b'<a href="#">Missing</a>' in response.data
 
 def test_player_not_found(client):
     # Simulate a request context to enable url_for to work
@@ -30,25 +53,16 @@ def test_player_not_found(client):
 
 def test_player_profile_found(client):
     # Create a dummy player in the test database
-    player = Player(player_id=123, first_name='John', last_name='Doe', team_name='Sharks',
-                    position='Forward', jersey_number=12, headshot='', birth_city='City', birth_province='Province',
-                    birth_country='Country', height_in_inches=70, weight_in_pounds=180, points_per_game=0.8,
-                    goals_per_game=0.5, avg_toi='20:10', shooting_pct=12.5, games_played=50, goals=25, assists=20,
-                    points=45, shots=150, power_play_goals=5)
-    player_rank = PlayerRank(player_id=123, rank=0.4)
-    db.session.add(player)
-    db.session.add(player_rank)
-    db.session.commit()
 
     # Simulate a request context to enable url_for to work
     with client.application.app_context():
         # Simulate visiting the player profile page for the newly created player
-        response = client.get(url_for('main.player_profile', player_id=123))
+        response = client.get(url_for('main.player_profile', player_id=1))
 
     # Assert that the response contains the player's name and other stats
-    assert b'John Doe' in response.data
-    assert b'Sharks' in response.data
-    assert b'0.4<sup>th</sup> Percentile' in response.data
+    assert b'Test Player' in response.data
+    assert b'Test Team' in response.data
+    assert b'0.5<sup>th</sup> Percentile' in response.data
     assert response.status_code == 200
 
 

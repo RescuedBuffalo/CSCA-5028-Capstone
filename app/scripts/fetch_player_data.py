@@ -45,6 +45,7 @@ def fetch_player_data(config='production'):
                 existing_player.power_play_goals = processed_data["career_stats"]["powerPlayGoals"]
                 existing_player.shooting_pct = processed_data["career_stats"]["shootingPctg"]
                 existing_player.avg_toi = processed_data["career_stats"]["avgToi"]
+                existing_player.team_id = processed_data["player_info"]["team_id"]
             else:
                 # Insert a new player
                 new_player = Player(
@@ -69,7 +70,8 @@ def fetch_player_data(config='production'):
                     shots=processed_data["career_stats"]["shots"],
                     power_play_goals=processed_data["career_stats"]["powerPlayGoals"],
                     shooting_pct=processed_data["career_stats"]["shootingPctg"],
-                    avg_toi=processed_data["career_stats"]["avgToi"]
+                    avg_toi=processed_data["career_stats"]["avgToi"],
+                    team_id=processed_data["player_info"]["team_id"]
                 )
                 db.session.add(new_player)
 

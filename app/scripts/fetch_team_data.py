@@ -38,3 +38,7 @@ def fetch_team_data():
         except Exception as e:
             db.session.rollback()
             print(f"Error saving data: {e}")
+
+if __name__ == '__main__':
+    with app.app_context():
+        fetch_team_data()

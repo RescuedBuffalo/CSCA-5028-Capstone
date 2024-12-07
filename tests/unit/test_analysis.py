@@ -16,6 +16,7 @@ sample_player_data = {
     "birthCountry": "CAN",
     "heightInInches": 73,
     "weightInPounds": 194,
+    "currentTeamId": 22,
     "careerTotals": {
         "regularSeason": {
             "gamesPlayed": 645,

@@ -24,6 +24,7 @@ class Player(db.Model):
     power_play_goals = db.Column(db.Integer, nullable=False)
     shooting_pct = db.Column(db.Float, nullable=False)
     avg_toi = db.Column(db.String(10), nullable=False)
+    team_id = db.Column(db.Integer, nullable=False)
 
     def to_dict(self):
         return {
@@ -53,7 +54,8 @@ class Player(db.Model):
 
     def __repr__(self):
         return f'<Player {self.first_name} {self.last_name}>'
-    
+
+
 class GameLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     player_id = db.Column(db.Integer, db.ForeignKey('player.player_id'), nullable=False)
@@ -70,9 +72,27 @@ class GameLog(db.Model):
     pim = db.Column(db.Integer, nullable=False)  # Penalty Minutes
     toi = db.Column(db.String(10), nullable=False)  # Time on Ice
 
+    def to_dict(self):
+        return {
+            'player_id': self.player_id,
+            'game_id': self.game_id,
+            'game_date': self.game_date,
+            'opponent': self.opponent,
+            'home_road_flag': self.home_road_flag,
+            'goals': self.goals,
+            'assists': self.assists,
+            'points': self.points,
+            'shots': self.shots,
+            'plus_minus': self.plus_minus,
+            'power_play_goals': self.power_play_goals,
+            'pim': self.pim,
+            'toi': self.toi
+        }
+
     def __repr__(self):
         return f'<GameLog {self.player_id} - {self.game_date}>'
-    
+
+
 class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     team_id = db.Column(db.Integer, unique=True, nullable=False)
@@ -82,13 +102,47 @@ class Team(db.Model):
     tricode = db.Column(db.String(3), nullable=False)
     league_id = db.Column(db.Integer, nullable=False)
 
+    def to_dict(self):
+        return {
+            'team_id': self.team_id,
+            'franchise_id': self.franchise_id,
+            'full_name': self.full_name,
+            'raw_tricode': self.raw_tricode,
+            'tricode': self.tricode,
+            'league_id': self.league_id
+        }
+
+    def __repr__(self):
+        return f'<Team {self.full_name}>'
+
+
 class Roster(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     player_id = db.Column(db.Integer, nullable=False)
     team_id = db.Column(db.Integer, nullable=False)
     season = db.Column(db.String(8), nullable=False)
 
+    def to_dict(self):
+        return {
+            'player_id': self.player_id,
+            'team_id': self.team_id,
+            'season': self.season
+        }
+
+    def __repr__(self):
+        return f'<Roster Player {self.player_id} Team {self.team_id}>'
+
+
 class PlayerRank(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     player_id = db.Column(db.Integer, nullable=False)
     rank = db.Column(db.Integer, nullable=False)
+
+    def to_dict(self):
+        return {
+            'player_id': self.player_id,
+            'rank': self.rank
+        }
+
+    def __repr__(self):
+        return f'<PlayerRank Player {self.player_id} Rank {self.rank}>'
