@@ -23,10 +23,6 @@ def test_team_table(client):
     with client.application.app_context():
         response = client.get(url_for('main.index'))
 
-    # write response.data to a file
-    with open('response.data', 'wb') as f:
-        f.write(response.data)
-
     assert b'Test Team' in response.data
 
 def test_team_table_empty(client):
@@ -62,7 +58,7 @@ def test_player_profile_found(client):
     # Assert that the response contains the player's name and other stats
     assert b'Test Player' in response.data
     assert b'Test Team' in response.data
-    assert b'0.5<sup>th</sup> Percentile' in response.data
+    assert b'99<sup>th</sup> Percentile' in response.data
     assert response.status_code == 200
 
 

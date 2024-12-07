@@ -83,9 +83,15 @@ def populate_test_db():
 
         player_rank = PlayerRank(
             player_id=1,
-            rank=0.5
+            rank=99
         )
         db.session.add(player_rank)
+
+        player_rank2 = PlayerRank(
+            player_id=1,
+            rank=1
+        )
+        db.session.add(player_rank2)
 
         team = Team(
             team_id=9999,
@@ -119,6 +125,7 @@ def populate_test_db():
             season="20242025"
         )
         db.session.add(roster2)
+
 
         db.session.commit()
 
