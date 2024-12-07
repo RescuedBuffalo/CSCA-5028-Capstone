@@ -28,3 +28,13 @@ def get_nhl_team_roster_by_season(team, season):
         return response.json()
     else:
         return '404'
+    
+def check_team_has_stats(team_code, season=20242025, season_type=2):
+    url = f'https://api-web.nhle.com/v1/club-stats/{team_code}/{season}/{season_type}'
+
+    response = requests.get(url)
+
+    if response.status_code == 404:
+        return False
+    else:
+        return True

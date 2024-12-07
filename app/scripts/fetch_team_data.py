@@ -1,6 +1,6 @@
 from app import db, create_app
 from app.models import Team
-from app.utils.nhl_api import get_nhl_teams
+from app.utils.nhl_api import get_nhl_teams, check_team_has_stats
 import os
 from dotenv import load_dotenv
 
@@ -20,7 +20,8 @@ def fetch_team_data():
                 existing_team = None
                 print(f"Error querying Team table: {e}")
 
-            if not existing_team:
+            if not existing_team and check_team_has_stats(team['triCode']):
+
                 print('Adding new team...')
                 new_team = Team(
                     team_id=team['id'],
