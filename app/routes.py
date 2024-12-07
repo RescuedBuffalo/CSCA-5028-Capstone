@@ -92,7 +92,7 @@ def player_profile(player_id):
         "power_play_goals": player.power_play_goals
     }
 
-    return render_template('report.html', player_info=player_info, game_logs=game_logs)
+    return render_template('report.html', player_info=player_info, game_logs=game_logs, rank=player_rank.rank), 200
 
 @bp.route('/analyze/players', methods=['POST'])
 def analyze_players():
