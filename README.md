@@ -17,16 +17,13 @@ Check out the hosted version of the app if you don't feel like running it in dev
 
 ### Development Setup
 
-1. **Clone the Repository**:
-    ```bash
-    git clone <repository-url>
-    cd CSCA-5028-Capstone
-    ```
+1. **Download Submitted ZIP**:
+    - Open terminal and navigate to unzipped root directory.
 
 2. **Set Up Virtual Environment**:
     ```bash
-    python -m venv venv
-    source venv/bin/activate
+    python -m venv {venv-name}
+    source {venv-name}/bin/activate
     ```
 
 3. **Install Dependencies**:
@@ -53,7 +50,11 @@ Check out the hosted version of the app if you don't feel like running it in dev
 
 ### Production Setup
 
-1. **Deploy to Heroku**:
+1. **Deploy to Heroku (SKIP)**:
+    - Below are the steps if you wanted to host your own version in Heroku, there would be scheduler steps, postgres steps and Cloud AMPQ steps to do as well.
+        - **I highly recommend skipping this**, it is more for my future reference and documentation.
+
+
     - Ensure the `Procfile` is configured correctly for the app.
     - Setup your app in heroku.
     - Configure git to push to heroku remote.
@@ -66,7 +67,7 @@ Check out the hosted version of the app if you don't feel like running it in dev
     - Prometheus and Grafana are pre-configured for production monitoring.
     - Ensure the `/metrics` endpoint is accessible.
       ```bash
-      curl -X POST [url]/metrics
+      curl -X POST {localhost:5000 or https://nhl-reporting-app-b1fe017be8db.herokuapp.com/}/metrics
       ```
 
 ## Monitoring
@@ -90,12 +91,18 @@ The application integrates Prometheus and Grafana for monitoring.
 
 ## Testing
 
-1. **Run Unit Tests**:
+1. **Run Tests**:
+    ```bash
+    pytest
+    ```
+    OR you can run test groups individually:
+
+2a. **Run Only Unit Tests**:
     ```bash
     pytest tests/unit
     ```
 
-2. **Integration Tests**:
+2b. **Integration Tests**:
     ```bash
     pytest tests/integration
     ```
@@ -119,10 +126,11 @@ The application integrates Prometheus and Grafana for monitoring.
     - ~~Instead of search, add table of teams~~
     - ~~Then add table of players~~
     - ~~Then player profiles~~
-- Add some more error protection
-- Update ReadMe and Internal Documentation More
-- High Level Report
-    - Whiteboard Diagram + Description
-    - Justification for Design Decisions
-        Ex) Why Postgres? Why Heroku?
-    - System Requirements + How Testable They Were
+- ~~Add some more error protection~~
+- ~~Update ReadMe and Internal Documentation More~~
+- ~~High Level Report~~
+    - ~~Whiteboard Diagram + Description~~
+    - ~~Justification for Design Decisions~~
+        ~~Ex) Why Postgres? Why Heroku?~~
+    - ~~System Requirements + How Testable They Were~~
+~~
