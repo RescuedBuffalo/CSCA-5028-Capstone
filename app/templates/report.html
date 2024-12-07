@@ -12,74 +12,48 @@
         {% endif %}
     </title>
     <style>
-        /* General styles for the page */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-
-        main {
-            padding: 20px;
-            max-width: 900px;
-            margin: auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h1, h2, h3 {
-            color: #00205B; /* Oilers blue */
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-
+    
         th, td {
             padding: 12px;
             text-align: left;
         }
-
+    
         th {
             background-color: #FC4C02; /* Oilers orange-gold */
             color: white;
             font-weight: bold;
             border-bottom: 2px solid #00205B; /* Oilers blue */
         }
-
+    
         td {
             border-bottom: 1px solid #ddd;
         }
-
-        /* Alternating row colors for better readability */
+    
+        /* Right-align numeric columns for readability */
+        td:nth-child(1),
+        td:nth-child(2),
+        td:nth-child(3),
+        td:nth-child(4),
+        td:nth-child(5),
+        td:nth-child(6),
+        td:nth-child(7),
+        td:nth-child(8),
+        td:nth-child(9),
+        td:nth-child(10) {
+            text-align: right;
+        }
+    
         tbody tr:nth-child(odd) {
             background-color: #f9f9f9;
         }
-
+    
         tbody tr:nth-child(even) {
-            background-color: #e6f7ff; /* Light blue shade */
-        }
-
-        /* Hover effect for rows */
-        tbody tr:hover {
-            background-color: #d6eaff; /* Slightly darker blue */
-        }
-
-        /* Chart container */
-        canvas {
-            display: block;
-            margin: auto;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 20px;
-            color: #777;
+            background-color: #e6f7ff;
         }
     </style>
 </head>
@@ -93,38 +67,38 @@
             <h3>Height: {{ player_info['height_in_inches'] }} inches, Weight: {{ player_info['weight_in_pounds'] }} lbs</h3>
 
             <h2>Career Regular Season Stats</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Games Played</th>
-                        <th>Goals</th>
-                        <th>Assists</th>
-                        <th>Points</th>
-                        <th>Percentile Rank (Points)</th>
-                        <th>Shots</th>
-                        <th>Power Play Goals</th>
-                        <th>Shooting Percentage</th>
-                        <th>Points Per Game</th>
-                        <th>Goals Per Game</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{ player_info['games_played'] }}</td>
-                        <td>{{ player_info['goals'] }}</td>
-                        <td>{{ player_info['assists'] }}</td>
-                        <td>{{ player_info['points'] }}</td>
-                        <td>{{ (rank['rank'] * 100) | int }}<sup>th</sup> Percentile</td>
-                        <td>{{ player_info['shots'] }}</td>
-                        <td>{{ player_info['power_play_goals'] }}</td>
-                        <td>{{ player_info['shooting_pct'] }}</td>
-                        <td>{{ player_info['points_per_game'] }}</td>
-                        <td>{{ player_info['goals_per_game'] }}</td>
-                    </tr>
-                </tbody>
-            </table>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Games Played</th>
+                            <th>Goals</th>
+                            <th>Assists</th>
+                            <th>Points</th>
+                            <th>Percentile Rank (Points)</th>
+                            <th>Shots</th>
+                            <th>Power Play Goals</th>
+                            <th>Shooting Percentage</th>
+                            <th>Points Per Game</th>
+                            <th>Goals Per Game</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ player_info['games_played'] }}</td>
+                            <td>{{ player_info['goals'] }}</td>
+                            <td>{{ player_info['assists'] }}</td>
+                            <td>{{ player_info['points'] }}</td>
+                            <td>{{ (rank['rank'] * 100) | int }}<sup>th</sup> Percentile</td>
+                            <td>{{ player_info['shots'] }}</td>
+                            <td>{{ player_info['power_play_goals'] }}</td>
+                            <td>{{ player_info['shooting_pct'] | round(2) }}%</td>
+                            <td>{{ player_info['points_per_game'] | round(2) }}</td>
+                            <td>{{ player_info['goals_per_game'] | round(2) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-            <h2>Performance in the Last 5 Games (Goals, Assists, Points)</h2>
+            <h2>Season History (Goals, Assists, Points)</h2>
             <canvas id="performanceChart" style="max-width: 100%; height: 300px;"></canvas> <!-- Adjusted height -->
             <script>
                 var ctx = document.getElementById('performanceChart').getContext('2d');
