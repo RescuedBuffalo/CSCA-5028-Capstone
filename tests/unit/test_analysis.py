@@ -1,3 +1,23 @@
+"""
+Unit tests for the `analyze_player_performance` function.
+
+This file:
+- Verifies that the `analyze_player_performance` function correctly processes player data.
+- Tests both complete and incomplete input data for robustness.
+- Uses sample data to simulate API responses.
+
+Dependencies:
+- `pytest` for managing test cases.
+- `app.utils.analysis.analyze_player_performance` for the function under test.
+
+Test Cases:
+- `test_analyze_player_performance`: Ensures the function correctly parses and analyzes complete player data.
+- `test_analyze_player_performance_missing_data`: Tests the function's behavior when input data is incomplete or missing.
+
+Sample Data:
+- `sample_player_data`: Mock data simulating a typical API response.
+"""
+
 import pytest
 from app.utils.analysis import analyze_player_performance
 
@@ -38,7 +58,20 @@ sample_player_data = {
     ]
 }
 
+
 def test_analyze_player_performance():
+    """
+    Test the `analyze_player_performance` function with complete data.
+
+    Steps:
+    1. Pass `sample_player_data` (complete player data) to the function.
+    2. Verify that the player's basic information is correctly extracted.
+    3. Validate the calculations for career stats such as games played, points per game, and goals per game.
+    4. Ensure the last 5 games data is parsed and matches the input.
+
+    Expected Outcome:
+    - Basic player information, career stats, and last 5 games data are accurately processed.
+    """
     result = analyze_player_performance(sample_player_data)
 
     # Test basic player info extraction
@@ -62,6 +95,19 @@ def test_analyze_player_performance():
 
 
 def test_analyze_player_performance_missing_data():
+    """
+    Test the `analyze_player_performance` function with incomplete data.
+
+    Steps:
+    1. Modify `sample_player_data` to simulate missing data (e.g., remove `last5Games`).
+    2. Pass the modified data to the function.
+    3. Verify that basic player information is still correctly extracted.
+    4. Ensure the missing data is handled gracefully (e.g., return an empty list for `last_5_games`).
+
+    Expected Outcome:
+    - Basic player information is extracted.
+    - Missing data (e.g., last 5 games) does not cause errors, and the output correctly handles the absence of data.
+    """
     # Remove some fields from the mock data to simulate missing data
     incomplete_data = sample_player_data.copy()
     del incomplete_data["last5Games"]  # Simulate missing last 5 games

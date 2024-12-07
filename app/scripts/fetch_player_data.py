@@ -1,3 +1,27 @@
+"""
+Script for fetching and updating player data from the NHL API.
+
+This script:
+- Fetches player stats from the NHL stats API.
+- Analyzes the performance of players.
+- Updates or inserts player information into the database.
+
+Dependencies:
+- `requests` for making HTTP requests to the NHL stats API.
+- `dotenv` for loading environment variables.
+- Flask app and SQLAlchemy for database interactions.
+
+Usage:
+Run this script to fetch and save player data for all players listed in the roster.
+
+Environment Variables:
+- `CONFIG_NAME`: The Flask configuration name (e.g., development, production).
+- `SQLALCHEMY_DATABASE_URI`: The database connection URI.
+
+Example:
+    python fetch_player_data.py
+"""
+
 from app import db, create_app
 from app.models import Player, Roster
 from app.utils.nhl_api import get_nhl_player_stats
@@ -7,23 +31,41 @@ from dotenv import load_dotenv
 
 
 def fetch_player_data(config='production'):
+    """
+    Fetch and update player data from the NHL API.
 
+    Steps:
+    1. Retrieve player IDs from the `Roster` database table.
+    2. For each player:
+       a. Fetch player stats from the NHL stats API.
+       b. Analyze the player's performance using custom analysis logic.
+       c. Update the `Player` database table with new stats or insert a new record.
+    3. Commit all changes to the database.
 
+    Args:
+        config (str): The application configuration name (default: 'production').
+
+    Raises:
+        Exception: Rolls back the transaction if database commit fails.
+    """
+    # Retrieve all unique player IDs from the roster
     player_ids = db.session.query(Roster.player_id).distinct().all()
-    
-    for player_id in player_ids:
-        player_id = player_id[0]
 
+    for player_id in player_ids:
+        player_id = player_id[0]  # Extract the player ID from the tuple
+
+        # Fetch player data from the NHL API
         player_data = get_nhl_player_stats(player_id)
 
         if player_data:
+            # Analyze the player's performance
             processed_data = analyze_player_performance(player_data)
 
             # Check if the player already exists in the database
             existing_player = Player.query.filter_by(player_id=player_id).first()
 
-            if existing_player and processed_data.get("career_stats", None) != None:
-                # Update the existing player
+            if existing_player and processed_data.get("career_stats", None) is not None:
+                # Update the existing player's information
                 existing_player.first_name = processed_data["player_info"]["first_name"]
                 existing_player.last_name = processed_data["player_info"]["last_name"]
                 existing_player.team_name = processed_data["player_info"]["team_name"]
@@ -47,7 +89,7 @@ def fetch_player_data(config='production'):
                 existing_player.avg_toi = processed_data["career_stats"]["avgToi"]
                 existing_player.team_id = processed_data["player_info"]["team_id"]
             else:
-                # Insert a new player
+                # Insert a new player into the database
                 new_player = Player(
                     player_id=player_id,
                     first_name=processed_data["player_info"]["first_name"],
@@ -75,21 +117,31 @@ def fetch_player_data(config='production'):
                 )
                 db.session.add(new_player)
 
+    # Commit changes to the database
     try:
         db.session.commit()
         print('Data saved successfully to {}'.format(os.getenv('SQLALCHEMY_DATABASE_URI')))
         db.session.close()
     except Exception as e:
+        # Rollback on error
         db.session.rollback()
         print(f"Error saving data: {e}")
         db.session.close()
 
+
 if __name__ == '__main__':
+    """
+    Entry point for the script.
+
+    Loads environment variables, initializes the Flask app, and fetches player data.
+    """
+    # Load environment variables
     load_dotenv('.env')
 
+    # Initialize the Flask application
     config_name = os.getenv('CONFIG_NAME')
-
     app = create_app(config_name=config_name)
-    
+
+    # Run the data fetching logic within the app context
     with app.app_context():
         fetch_player_data()

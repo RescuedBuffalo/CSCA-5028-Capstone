@@ -1,6 +1,34 @@
 from app import db
 
 class Player(db.Model):
+    """
+    Represents a player in the NHL.
+
+    Attributes:
+        player_id (int): Unique ID for the player.
+        first_name (str): First name of the player.
+        last_name (str): Last name of the player.
+        team_name (str): Name of the team the player belongs to.
+        position (str): Player's position (e.g., Forward, Defenseman).
+        jersey_number (int): Player's jersey number.
+        headshot (str): URL to the player's headshot image.
+        birth_city (str): City where the player was born.
+        birth_province (str): Province where the player was born.
+        birth_country (str): Country where the player was born.
+        height_in_inches (int): Player's height in inches.
+        weight_in_pounds (int): Player's weight in pounds.
+        points_per_game (float): Average points per game.
+        goals_per_game (float): Average goals per game.
+        games_played (int): Total number of games played.
+        goals (int): Total goals scored.
+        assists (int): Total assists made.
+        points (int): Total points earned.
+        shots (int): Total number of shots taken.
+        power_play_goals (int): Goals scored during power plays.
+        shooting_pct (float): Shooting percentage.
+        avg_toi (str): Average time on ice per game.
+        team_id (int): ID of the team the player belongs to.
+    """
     id = db.Column(db.Integer, primary_key=True)
     player_id = db.Column(db.Integer, unique=True, nullable=False)
     first_name = db.Column(db.String(100), nullable=False)
@@ -27,6 +55,9 @@ class Player(db.Model):
     team_id = db.Column(db.Integer, nullable=False)
 
     def to_dict(self):
+        """
+        Converts the Player object to a dictionary for JSON serialization.
+        """
         return {
             'player_id': self.player_id,
             'first_name': self.first_name,
@@ -53,26 +84,50 @@ class Player(db.Model):
         }
 
     def __repr__(self):
+        """
+        Provides a string representation of the Player object.
+        """
         return f'<Player {self.first_name} {self.last_name}>'
 
 
 class GameLog(db.Model):
+    """
+    Represents a single game log for a player.
+
+    Attributes:
+        player_id (int): ID of the player associated with this game log.
+        game_id (int): Unique ID of the game.
+        game_date (str): Date of the game.
+        opponent (str): Opponent team.
+        home_road_flag (str): Indicates if the game was at home ('H') or away ('R').
+        goals (int): Goals scored in the game.
+        assists (int): Assists made in the game.
+        points (int): Total points earned in the game.
+        shots (int): Total number of shots taken.
+        plus_minus (int): Plus/minus rating for the game.
+        power_play_goals (int): Power play goals scored.
+        pim (int): Penalty minutes in the game.
+        toi (str): Time on ice during the game.
+    """
     id = db.Column(db.Integer, primary_key=True)
     player_id = db.Column(db.Integer, db.ForeignKey('player.player_id'), nullable=False)
     game_id = db.Column(db.Integer, nullable=False)
     game_date = db.Column(db.String(20), nullable=False)
     opponent = db.Column(db.String(50), nullable=False)
-    home_road_flag = db.Column(db.String(1), nullable=False)  # 'H' for Home, 'R' for Road
+    home_road_flag = db.Column(db.String(1), nullable=False)
     goals = db.Column(db.Integer, nullable=False)
     assists = db.Column(db.Integer, nullable=False)
     points = db.Column(db.Integer, nullable=False)
     shots = db.Column(db.Integer, nullable=False)
     plus_minus = db.Column(db.Integer, nullable=False)
     power_play_goals = db.Column(db.Integer, nullable=False)
-    pim = db.Column(db.Integer, nullable=False)  # Penalty Minutes
-    toi = db.Column(db.String(10), nullable=False)  # Time on Ice
+    pim = db.Column(db.Integer, nullable=False)
+    toi = db.Column(db.String(10), nullable=False)
 
     def to_dict(self):
+        """
+        Converts the GameLog object to a dictionary for JSON serialization.
+        """
         return {
             'player_id': self.player_id,
             'game_id': self.game_id,
@@ -90,10 +145,24 @@ class GameLog(db.Model):
         }
 
     def __repr__(self):
+        """
+        Provides a string representation of the GameLog object.
+        """
         return f'<GameLog {self.player_id} - {self.game_date}>'
 
 
 class Team(db.Model):
+    """
+    Represents an NHL team.
+
+    Attributes:
+        team_id (int): Unique ID for the team.
+        franchise_id (int): Franchise ID of the team.
+        full_name (str): Full name of the team.
+        raw_tricode (str): Raw tricode representation of the team.
+        tricode (str): Official tricode of the team.
+        league_id (int): League ID of the team.
+    """
     id = db.Column(db.Integer, primary_key=True)
     team_id = db.Column(db.Integer, unique=True, nullable=False)
     franchise_id = db.Column(db.Integer, nullable=True)
@@ -103,6 +172,9 @@ class Team(db.Model):
     league_id = db.Column(db.Integer, nullable=False)
 
     def to_dict(self):
+        """
+        Converts the Team object to a dictionary for JSON serialization.
+        """
         return {
             'team_id': self.team_id,
             'franchise_id': self.franchise_id,
@@ -113,16 +185,29 @@ class Team(db.Model):
         }
 
     def __repr__(self):
+        """
+        Provides a string representation of the Team object.
+        """
         return f'<Team {self.full_name}>'
 
-
 class Roster(db.Model):
+    """
+    Represents the roster of a team for a specific season.
+
+    Attributes:
+        player_id (int): ID of the player in the roster.
+        team_id (int): ID of the team in the roster.
+        season (str): Season associated with the roster.
+    """
     id = db.Column(db.Integer, primary_key=True)
     player_id = db.Column(db.Integer, nullable=False)
     team_id = db.Column(db.Integer, nullable=False)
     season = db.Column(db.String(8), nullable=False)
 
     def to_dict(self):
+        """
+        Converts the Roster object to a dictionary for JSON serialization.
+        """
         return {
             'player_id': self.player_id,
             'team_id': self.team_id,
@@ -130,19 +215,34 @@ class Roster(db.Model):
         }
 
     def __repr__(self):
+        """
+        Provides a string representation of the Roster object.
+        """
         return f'<Roster Player {self.player_id} Team {self.team_id}>'
 
-
 class PlayerRank(db.Model):
+    """
+    Represents the percentile rank of a player based on performance metrics.
+
+    Attributes:
+        player_id (int): ID of the player.
+        rank (float): Percentile rank of the player.
+    """
     id = db.Column(db.Integer, primary_key=True)
     player_id = db.Column(db.Integer, nullable=False)
     rank = db.Column(db.Float, nullable=False)
 
     def to_dict(self):
+        """
+        Converts the PlayerRank object to a dictionary for JSON serialization.
+        """
         return {
             'player_id': self.player_id,
             'rank': self.rank
         }
 
     def __repr__(self):
+        """
+        Provides a string representation of the PlayerRank object.
+        """
         return f'<PlayerRank Player {self.player_id} Rank {self.rank}>'

@@ -81,13 +81,16 @@ The application integrates Prometheus and Grafana for monitoring.
 
 ## Testing
 
-1. **Run Tests**:
+1. **Run Unit Tests**:
     ```bash
-    pytest tests/
+    pytest tests/unit
     ```
 
 2. **Integration Tests**:
-    - Mock external dependencies using `pytest-mock` or `unittest.mock`.
+    ```bash
+    pytest tests/integration
+    ```
+
 
 ## Continuous Deployment
 
