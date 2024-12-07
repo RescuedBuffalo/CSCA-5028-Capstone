@@ -64,6 +64,8 @@ The application integrates Prometheus and Grafana for monitoring.
     - Try `database_connection_count_created`
     - Try `app_request_latency_seconds_created` as a Histogram in the Graph tab
     - Use autocomplete to find other metrics!
+- I also have a hosted prometheus server (at least for now):
+    - [Prometheus server](https://nhl-reporting-prometheus-e58e22902675.herokuapp.com/graph)
 
 - **Grafana**:
   - Access dashboards for real-time insights.
@@ -90,9 +92,9 @@ The application integrates Prometheus and Grafana for monitoring.
     - ~~Fix worker errors in prod~~
     - ~~Setup endpoint that calls producers.py~~
     - ~~Setup schedule Post to the producer endpoint~~
-- Improve Analyzer API
-    - Add Analyzer Endpoint
-    - Do some sort of basic analysis
+- ~~Improve Analyzer API~~
+    - ~~Add Analyzer Endpoint~~
+    - ~~Do some sort of basic analysis~~
 - Improve UI a Little
     - Instead of search, add table of teams
     - Then add table of players

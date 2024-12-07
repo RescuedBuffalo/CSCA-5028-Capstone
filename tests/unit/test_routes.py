@@ -34,7 +34,7 @@ def test_player_profile_found(client):
                     position='Forward', jersey_number=12, headshot='', birth_city='City', birth_province='Province',
                     birth_country='Country', height_in_inches=70, weight_in_pounds=180, points_per_game=0.8,
                     goals_per_game=0.5, avg_toi='20:10', shooting_pct=12.5, games_played=50, goals=25, assists=20,
-                    points=45, shots=150, power_play_goals=5)
+                    points=45, rank=40, shots=150, power_play_goals=5)
     db.session.add(player)
     db.session.commit()
 
@@ -46,6 +46,7 @@ def test_player_profile_found(client):
     # Assert that the response contains the player's name and other stats
     assert b'John Doe' in response.data
     assert b'Sharks' in response.data
+    assert b'40<sup>th</sup> Percentile' in response.data
     assert response.status_code == 200
 
 

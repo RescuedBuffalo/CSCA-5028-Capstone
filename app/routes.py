@@ -1,12 +1,14 @@
 from flask import Blueprint, render_template, request, redirect, url_for, Response
 from app.utils.nhl_api import get_nhl_player_stats
 from app.utils.analysis import analyze_player_performance
-from app.models import Player, GameLog
+from app.models import Player, GameLog, PlayerRank
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST, REGISTRY, Counter, Histogram
 import time
 import os
 import logging as LOGGER
 import app.scripts.producer as producer
+from sqlalchemy import text
+from app import db
 
 
 # Create a blueprint for the routes
@@ -54,6 +56,7 @@ def player_profile(player_id):
 
     player = Player.query.filter_by(player_id=player_id).first()
     game_logs = GameLog.query.filter_by(player_id=player_id).all()
+    player_rank = PlayerRank.query.filter_by(player_id=player_id).first()
 
     if not player:
         return render_template('report.html', error_message='Player not found'), 404
@@ -79,14 +82,40 @@ def player_profile(player_id):
         "goals": player.goals,
         "assists": player.assists,
         "points": player.points,
+        "rank": player_rank.rank,
         "shots": player.shots,
         "power_play_goals": player.power_play_goals
     }
 
     return render_template('report.html', player_info=player_info, game_logs=game_logs)
 
-# Create endpoint that runs producers.py to produce tasks in the queue
-@bp.route('/produce_tasks')
+@bp.route('/analyze/players', methods=['POST'])
+def analyze_players():
+    try:
+        # Fetch all players and calculate percent rank
+        players = Player.query.order_by(Player.points_per_game.desc()).all()
+        total_players = len(players)
+
+        # Drop the players_ranked table if it exists (for the sake of exercise)
+        PlayerRank.query.delete()
+
+        # Calculate percent rank and save it in the players_ranked table
+        for idx, player in enumerate(players):
+            percent_rank = idx / (total_players - 1) if total_players > 1 else 0
+            player_rank = PlayerRank(
+                player_id=player.player_id,
+                rank=percent_rank
+            )
+            db.session.add(player_rank)
+
+        db.session.commit()
+        return Response("Players analysis completed.", status=200)
+    except Exception as e:
+        db.session.rollback()
+        LOGGER.error(f"Error analyzing players: {e}")
+        return Response(f"Failed to analyze players", status=500)
+
+@bp.route('/produce_tasks', methods=['POST'])
 def produce_tasks():
     response_code = producer.main()
     PRODUCER_TRIGGERED.inc()
@@ -97,12 +126,12 @@ def produce_tasks():
         PRODUCER_SUCCEEDED.inc()
         return Response("Tasks successfully added to queue.", status=response_code)
 
-@bp.route('/metrics')
+@bp.route('/metrics', methods=['POST'])
 def metrics():
     data = generate_latest(REGISTRY)
     return Response(data, content_type=CONTENT_TYPE_LATEST, status=200)
 
-@bp.route('/health')
+@bp.route('/health', methods=['POST'])
 def health():
     return Response("ok", status=200)
 

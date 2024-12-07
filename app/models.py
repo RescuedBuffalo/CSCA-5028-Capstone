@@ -87,3 +87,8 @@ class Roster(db.Model):
     player_id = db.Column(db.Integer, nullable=False)
     team_id = db.Column(db.Integer, nullable=False)
     season = db.Column(db.String(8), nullable=False)
+
+class PlayerRank(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    player_id = db.Column(db.Integer, nullable=False)
+    rank = db.Column(db.Integer, nullable=False)
