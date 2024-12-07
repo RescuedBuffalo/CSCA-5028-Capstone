@@ -3,8 +3,11 @@ import time
 import requests
 import pytest
 import os
+from dotenv import load_dotenv
+
 
 # Constants
+load_dotenv()
 BASE_URL = os.getenv("APP_BASE_URL")
 NUM_USERS = 100  # Number of concurrent users
 ALLOWED_FAILURES = 1  # Maximum allowed failures

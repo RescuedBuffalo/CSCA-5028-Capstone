@@ -36,10 +36,19 @@ Check out the hosted version of the app if you don't feel like running it in dev
 
 4. **Configure Environment Variables**:
     Create a `.env` file based on the `.env.example` template, and configure the necessary variables.
+    ```bash
+    cp .env.template .env
+    source .env
+    ```
 
 5. **Run the Application**:
     ```bash
-    flask run
+    flask run --host=0.0.0.0 --port=5000
+    ```
+
+    An error I ran into in a fresh environment was related to `prometheus_flask_exporter module` not existing when it is in the `requirements.txt`. I was able to resolve with:
+    ```bash
+    export PYTHONPATH=$(pip show prometheus_flask_exporter | grep Location | awk '{print $2}')
     ```
 
 ### Production Setup
