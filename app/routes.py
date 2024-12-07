@@ -98,7 +98,7 @@ def player_profile(player_id):
 def analyze_players():
     try:
         # Fetch all players and calculate percent rank
-        players = Player.query.order_by(Player.points.desc()).all()
+        players = Player.query.order_by(Player.points.asc()).all()
         total_players = len(players)
 
         # Drop the players_ranked table if it exists (for the sake of exercise)

@@ -2,10 +2,14 @@
 
 An NHL stats dashboard built for the CSCA-5028 Capstone project. This application provides insightful analysis and visualizations of NHL player and game statistics.
 
+Check out the hosted version of the app if you don't feel like running it in development!
+
+[Link to the Heroku hosted address.](https://nhl-reporting-app-b1fe017be8db.herokuapp.com/)
+
 ## Features
 
 - **Player Statistics**: View career and season metrics for NHL players.
-- **Player Analyzer**: Simple analyze endpoint that calculates what current percentile the player is in based on their points. Using Heroku scheduler, I 
+- **Player Analyzer**: Simple analyze endpoint that calculates what current percentile the player is in based on their points. Using Heroku scheduler, I run `PYTHONPATH=. app/scripts/trigger_analyze.py` at 1am PST to have my analyzer endoint create the percentile ranked data.
 - **Monitoring**: Integrated Prometheus and Grafana for real-time monitoring of app performance (see [this repo](https://github.com/RescuedBuffalo/nhl-reporting-prometheus)).
 - **Event Queue**: Integrated Event Queue using pika and CloudAMQP in Heroku, there is a worker that runs on its own dyno. Using Heroku scheduler, I run `PYTONPATH=. app/scripts/trigger_produce.py` at midnight PST to have my producer endpoint add tasks to the queue to refresh data.
 
@@ -42,6 +46,8 @@ An NHL stats dashboard built for the CSCA-5028 Capstone project. This applicatio
 
 1. **Deploy to Heroku**:
     - Ensure the `Procfile` is configured correctly for the app.
+    - Setup your app in heroku.
+    - Configure git to push to heroku remote.
     - Push the app to Heroku:
       ```bash
       git push heroku main
@@ -50,6 +56,9 @@ An NHL stats dashboard built for the CSCA-5028 Capstone project. This applicatio
 2. **Integrate Monitoring**:
     - Prometheus and Grafana are pre-configured for production monitoring.
     - Ensure the `/metrics` endpoint is accessible.
+      ```bash
+      curl -X POST [url]/metrics
+      ```
 
 ## Monitoring
 
