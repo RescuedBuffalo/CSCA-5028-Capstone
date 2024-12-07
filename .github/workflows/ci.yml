@@ -44,6 +44,7 @@ jobs:
             RABBITMQ_URL: ${{ secrets.RABBITMQ_URL }}
             SQLALCHEMY_DATABASE_URI: ${{ secrets.SQLALCHEMY_DATABASE_URI }}
             DATABASE_URL: ${{ secrets.DATABASE_URL }}
+            APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
           run: |
             source venv/bin/activate
             echo FLASK_ENV=testing >> .env
