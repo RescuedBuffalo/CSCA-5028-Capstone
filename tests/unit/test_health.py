@@ -13,7 +13,7 @@ def client():
 # Test the /health endpoint to ensure it returns a 200 status code
 def test_health_endpoint(client):
 
-    response = client.get('/health')
+    response = client.post('/health')
     
     assert response.status_code == 200
     assert response.data == b"ok"

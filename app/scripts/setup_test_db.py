@@ -1,5 +1,5 @@
 from app import create_app, db
-from app.models import Player, GameLog
+from app.models import Player, GameLog, PlayerRank
 from dotenv import load_dotenv
 
 def populate_test_db():
@@ -52,6 +52,12 @@ def populate_test_db():
             toi=20.5,
         )
         db.session.add(game_log)
+
+        player_rank = PlayerRank(
+            player_id=1,
+            rank=0.5
+        )
+        db.session.add(player_rank)
 
         db.session.commit()
 

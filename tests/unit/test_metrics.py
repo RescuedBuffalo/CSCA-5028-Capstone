@@ -19,8 +19,7 @@ def test_metrics_endpoint(client):
         with patch('prometheus_client.exposition.generate_latest') as mock_generate_latest:
             mock_generate_latest.return_value = b'# HELP app_info Application info\n# TYPE app_info gauge\napp_info{version="1.0.0"} 1\n'
 
-            # Make a GET request to the /metrics endpoint
-            response = client.get('/metrics')
+            response = client.post('/metrics')
 
             # Assertions
             assert response.status_code == 200

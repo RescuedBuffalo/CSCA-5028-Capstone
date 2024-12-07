@@ -1,6 +1,6 @@
 import pytest
 from app import create_app, db
-from app.models import Player
+from app.models import Player, PlayerRank
 from flask import url_for
 
 @pytest.fixture
@@ -34,8 +34,10 @@ def test_player_profile_found(client):
                     position='Forward', jersey_number=12, headshot='', birth_city='City', birth_province='Province',
                     birth_country='Country', height_in_inches=70, weight_in_pounds=180, points_per_game=0.8,
                     goals_per_game=0.5, avg_toi='20:10', shooting_pct=12.5, games_played=50, goals=25, assists=20,
-                    points=45, rank=40, shots=150, power_play_goals=5)
+                    points=45, shots=150, power_play_goals=5)
+    player_rank = PlayerRank(player_id=123, rank=0.4)
     db.session.add(player)
+    db.session.add(player_rank)
     db.session.commit()
 
     # Simulate a request context to enable url_for to work
@@ -46,11 +48,11 @@ def test_player_profile_found(client):
     # Assert that the response contains the player's name and other stats
     assert b'John Doe' in response.data
     assert b'Sharks' in response.data
-    assert b'40<sup>th</sup> Percentile' in response.data
+    assert b'0.4<sup>th</sup> Percentile' in response.data
     assert response.status_code == 200
 
 
 def test_produce_tasks(client):
-    response = client.get(url_for('main.produce_tasks'))
+    response = client.post(url_for('main.produce_tasks'))
     assert response.status_code == 200
     assert b'Tasks successfully added to queue.' in response.data
